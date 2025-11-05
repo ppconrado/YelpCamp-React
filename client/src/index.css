@@ -206,6 +206,7 @@ body.home-hero {
   background-position: center;
   background-attachment: fixed;
   text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5);
+}
 
 /* When on home hero, make the cover container transparent and remove offsets */
 body.home-hero .cover-container {
