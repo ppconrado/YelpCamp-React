@@ -233,11 +233,23 @@ body.home-hero .footer {
 
 /* Home page inline footer positioned at bottom of hero */
 .home-hero-footer {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
-  bottom: 2rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
   text-align: center;
+  z-index: 1030; /* above content, below modals */
+  pointer-events: none; /* don't block clicks */
+}
+
+.home-hero-footer p {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: auto; /* allow link clicks if any in future */
 }
 
 /* Home-specific navbar link styles to mimic original */
