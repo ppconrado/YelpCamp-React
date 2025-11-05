@@ -5,12 +5,15 @@ import { deleteReview } from '../../api/reviews';
 import MapboxMap from '../../components/MapboxMap';
 import ReviewForm from '../../components/ReviewForm';
 import ImageCarousel from '../../components/ImageCarousel';
+import ConfirmModal from '../../components/ui/ConfirmModal';
 import { useFlash } from '../../context/FlashContext';
 import { useAuth } from '../../context/AuthContext';
 
 const CampgroundShow = () => {
   const [campground, setCampground] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState(null);
   const { id } = useParams();
   const { showFlash } = useFlash();
   const { currentUser } = useAuth();
@@ -24,15 +27,22 @@ const CampgroundShow = () => {
   };
 
   const handleReviewDelete = async (reviewId) => {
+    setReviewToDelete(reviewId);
+  };
+
+  const confirmReviewDelete = async () => {
+    if (!reviewToDelete) return;
     try {
-      const response = await deleteReview(id, reviewId);
+      const response = await deleteReview(id, reviewToDelete);
       showFlash(response.message, 'success');
       setCampground((prev) => ({
         ...prev,
-        reviews: prev.reviews.filter((review) => review._id !== reviewId),
+        reviews: prev.reviews.filter((review) => review._id !== reviewToDelete),
       }));
     } catch {
       showFlash('Erro ao remover review.', 'error');
+    } finally {
+      setReviewToDelete(null);
     }
   };
 
@@ -52,12 +62,18 @@ const CampgroundShow = () => {
   }, [id, showFlash, navigate]);
 
   const handleDelete = async () => {
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
     try {
       await deleteCampground(id);
       showFlash('O acampamento foi removido com sucesso!', 'success');
       navigate('/campgrounds');
     } catch {
       showFlash('Erro ao remover acampamento.', 'error');
+    } finally {
+      setShowDeleteModal(false);
     }
   };
 
@@ -183,6 +199,27 @@ const CampgroundShow = () => {
           )}
         </div>
       </div>
+
+      {/* Confirmation modals */}
+      <ConfirmModal
+        show={showDeleteModal}
+        title="Delete Campground"
+        message="Tem certeza que deseja remover este acampamento? Esta ação não pode ser desfeita."
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteModal(false)}
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+
+      <ConfirmModal
+        show={!!reviewToDelete}
+        title="Delete Review"
+        message="Tem certeza que deseja remover esta review?"
+        onConfirm={confirmReviewDelete}
+        onCancel={() => setReviewToDelete(null)}
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
     </>
   );
 };

@@ -1,26 +1,28 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext } from 'react';
+import toast from 'react-hot-toast';
 
 const FlashContext = createContext();
 
 export const useFlash = () => useContext(FlashContext);
 
 export const FlashProvider = ({ children }) => {
-  const [flashMessage, setFlashMessage] = useState(null);
-
   const showFlash = (message, type = 'success') => {
-    setFlashMessage({ message, type });
-    setTimeout(() => {
-      setFlashMessage(null);
-    }, 5000); // Mensagem desaparece após 5 segundos
+    if (type === 'success') {
+      toast.success(message);
+    } else if (type === 'error') {
+      toast.error(message);
+    } else {
+      toast(message);
+    }
   };
 
   const clearFlash = () => {
-    setFlashMessage(null);
+    toast.dismiss();
   };
 
   return (
-    <FlashContext.Provider value={{ flashMessage, showFlash, clearFlash }}>
+    <FlashContext.Provider value={{ showFlash, clearFlash, flashMessage: null }}>
       {children}
     </FlashContext.Provider>
   );

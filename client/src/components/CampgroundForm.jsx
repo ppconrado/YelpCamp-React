@@ -1,140 +1,150 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { createCampground, updateCampground } from '../api/campgrounds';
 import { useFlash } from '../context/FlashContext';
+import SubmitButton from './ui/SubmitButton';
+
+const campgroundSchema = z.object({
+  title: z.string().min(3, 'Título deve ter pelo menos 3 caracteres'),
+  location: z.string().min(3, 'Localização deve ter pelo menos 3 caracteres'),
+  price: z.coerce.number().min(0, 'Preço deve ser maior ou igual a zero'),
+  description: z.string().min(10, 'Descrição deve ter pelo menos 10 caracteres'),
+});
 
 const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
-  const [formData, setFormData] = useState({
-    title: initialData.title || '',
-    location: initialData.location || '',
-    price: initialData.price || 0,
-    description: initialData.description || '',
-    image: null, // Para o upload de arquivo
-  });
-  const [loading, setLoading] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
   const { showFlash } = useFlash();
   const navigate = useNavigate();
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(campgroundSchema),
+    defaultValues: {
+      title: initialData.title || '',
+      location: initialData.location || '',
+      price: initialData.price || 0,
+      description: initialData.description || '',
+    },
+  });
+
   useEffect(() => {
     if (isEdit && initialData) {
-      setFormData({
+      reset({
         title: initialData.title || '',
         location: initialData.location || '',
         price: initialData.price || 0,
         description: initialData.description || '',
-        image: null,
       });
     }
-  }, [isEdit, initialData]);
+  }, [isEdit, initialData, reset]);
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: files ? files[0] : value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const data = new FormData();
-    data.append('campground[title]', formData.title);
-    data.append('campground[location]', formData.location);
-    data.append('campground[price]', formData.price);
-    data.append('campground[description]', formData.description);
-    if (formData.image) {
-      data.append('image', formData.image);
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append('campground[title]', data.title);
+    formData.append('campground[location]', data.location);
+    formData.append('campground[price]', data.price);
+    formData.append('campground[description]', data.description);
+    if (imageFile) {
+      formData.append('image', imageFile);
     }
 
     try {
       let response;
       if (isEdit) {
-        response = await updateCampground(initialData._id, data);
+        response = await updateCampground(initialData._id, formData);
       } else {
-        response = await createCampground(data);
+        response = await createCampground(formData);
       }
       showFlash(response.message, 'success');
       navigate(`/campgrounds/${response.campground._id}`);
     } catch (error) {
       const errorMessage = error.response?.data?.error || 'Erro ao salvar acampamento.';
       showFlash(errorMessage, 'error');
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="validated-form" encType="multipart/form-data" noValidate>
-      <div className="mb-3">
-        <label className="form-label" htmlFor="title">Title</label>
+    <form onSubmit={handleSubmit(onSubmit)} className="validated-form" encType="multipart/form-data" noValidate>
+      <div className="form-floating mb-3">
         <input
-          className="form-control"
           type="text"
+          className={`form-control ${errors.title ? 'is-invalid' : ''}`}
           id="title"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          required
+          placeholder="Title"
+          {...register('title')}
         />
+        <label htmlFor="title">Title</label>
+        {errors.title && (
+          <div className="invalid-feedback">{errors.title.message}</div>
+        )}
       </div>
-      <div className="mb-3">
-        <label className="form-label" htmlFor="location">Location</label>
+
+      <div className="form-floating mb-3">
         <input
-          className="form-control"
           type="text"
+          className={`form-control ${errors.location ? 'is-invalid' : ''}`}
           id="location"
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-          required
+          placeholder="Location"
+          {...register('location')}
         />
+        <label htmlFor="location">Location</label>
+        {errors.location && (
+          <div className="invalid-feedback">{errors.location.message}</div>
+        )}
       </div>
+
       <div className="mb-3">
         <label className="form-label" htmlFor="price">Campground Price</label>
         <div className="input-group">
-          <span className="input-group-text" id="price-label">$</span>
+          <span className="input-group-text">$</span>
           <input
             type="number"
-            className="form-control"
+            step="0.01"
+            className={`form-control ${errors.price ? 'is-invalid' : ''}`}
             id="price"
-            name="price"
             placeholder="0.00"
-            aria-label="price"
-            aria-describedby="price-label"
-            value={formData.price}
-            onChange={handleChange}
-            required
+            {...register('price')}
           />
+          {errors.price && (
+            <div className="invalid-feedback">{errors.price.message}</div>
+          )}
         </div>
       </div>
-      <div className="mb-3">
-        <label className="form-label" htmlFor="description">Description</label>
+
+      <div className="form-floating mb-3">
         <textarea
-          className="form-control"
+          className={`form-control ${errors.description ? 'is-invalid' : ''}`}
           id="description"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          required
+          placeholder="Description"
+          style={{ height: '120px' }}
+          {...register('description')}
         ></textarea>
+        <label htmlFor="description">Description</label>
+        {errors.description && (
+          <div className="invalid-feedback">{errors.description.message}</div>
+        )}
       </div>
+
       <div className="mb-3">
         <label htmlFor="image" className="form-label">Add Image</label>
         <input
           className="form-control"
           type="file"
           id="image"
-          name="image"
-          onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.files[0] }))}
+          onChange={(e) => setImageFile(e.target.files[0])}
         />
       </div>
-      <div className="mb-3">
-        <button className="btn btn-success" disabled={loading}>
-          {loading ? 'Saving...' : (isEdit ? 'Update Campground' : 'Add Campground')}
-        </button>
-      </div>
+
+      <SubmitButton loading={isSubmitting} className="btn btn-success">
+        {isEdit ? 'Update Campground' : 'Add Campground'}
+      </SubmitButton>
     </form>
   );
 };

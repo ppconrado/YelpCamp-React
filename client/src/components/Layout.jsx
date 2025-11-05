@@ -78,24 +78,8 @@ const Navbar = () => {
 };
 
 const FlashMessage = () => {
-  const { flashMessage, clearFlash } = useFlash();
-
-  if (!flashMessage) return null;
-
-  return (
-    <div
-      className={`alert alert-${flashMessage.type} alert-dismissible fade show`}
-      role="alert"
-    >
-      {flashMessage.message}
-      <button
-        type="button"
-        className="btn-close"
-        onClick={clearFlash}
-        aria-label="Close"
-      ></button>
-    </div>
-  );
+  // Flash is now handled by react-hot-toast in main.jsx
+  return null;
 };
 
 const Footer = () => (

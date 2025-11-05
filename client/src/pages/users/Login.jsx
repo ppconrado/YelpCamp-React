@@ -1,37 +1,41 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { loginUser } from '../../api/auth';
 import { useFlash } from '../../context/FlashContext';
 import { useAuth } from '../../context/AuthContext';
 import CenteredCard from '../../components/ui/CenteredCard';
-import FormInput from '../../components/ui/FormInput';
 import SubmitButton from '../../components/ui/SubmitButton';
 
+const loginSchema = z.object({
+  username: z.string().min(1, 'Username é obrigatório'),
+  password: z.string().min(1, 'Password é obrigatória'),
+});
+
 const Login = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-  });
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { showFlash } = useFlash();
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const onSubmit = async (data) => {
     try {
-      const response = await loginUser(formData);
+      const response = await loginUser(data);
       login(response.user);
       showFlash(response.message, 'success');
       const redirectTo = location.state?.from?.pathname || '/campgrounds';
@@ -41,8 +45,6 @@ const Login = () => {
         error.response?.data?.error ||
         'Erro ao fazer login. Verifique suas credenciais.';
       showFlash(errorMessage, 'error');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -56,35 +58,48 @@ const Login = () => {
         </p>
       }
     >
-      <form onSubmit={handleSubmit} className="validated-form" noValidate>
-        <FormInput
-          id="username"
-          label="Username"
-          value={formData.username}
-          onChange={handleChange}
-          autoComplete="username"
-          autoFocus
-        />
-        <FormInput
-          id="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          value={formData.password}
-          onChange={handleChange}
-          autoComplete="current-password"
-          rightSlot={
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={() => setShowPassword((v) => !v)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-              title={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {showPassword ? 'Hide' : 'Show'}
-            </button>
-          }
-        />
-        <SubmitButton loading={loading}>Login</SubmitButton>
+      <form onSubmit={handleSubmit(onSubmit)} className="validated-form" noValidate>
+        <div className="form-floating mb-3">
+          <input
+            type="text"
+            className={`form-control ${errors.username ? 'is-invalid' : ''}`}
+            id="username"
+            placeholder="Username"
+            autoComplete="username"
+            autoFocus
+            {...register('username')}
+          />
+          <label htmlFor="username">Username</label>
+          {errors.username && (
+            <div className="invalid-feedback">{errors.username.message}</div>
+          )}
+        </div>
+
+        <div className="form-floating mb-3">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+            id="password"
+            placeholder="Password"
+            autoComplete="current-password"
+            {...register('password')}
+          />
+          <label htmlFor="password">Password</label>
+          <button
+            type="button"
+            className="btn btn-sm btn-link position-absolute end-0 top-50 translate-middle-y me-2"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            style={{ zIndex: 10 }}
+          >
+            {showPassword ? '👁️' : '👁️‍🗨️'}
+          </button>
+          {errors.password && (
+            <div className="invalid-feedback">{errors.password.message}</div>
+          )}
+        </div>
+
+        <SubmitButton loading={isSubmitting}>Login</SubmitButton>
       </form>
     </CenteredCard>
   );
