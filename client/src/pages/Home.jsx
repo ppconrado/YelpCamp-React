@@ -11,7 +11,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="cover-container d-flex flex-column min-vh-100 justify-content-center align-items-center text-center text-white">
+    <div className="cover-container d-flex flex-column justify-content-center align-items-center text-center text-white" style={{ minHeight: '100vh' }}>
       <div className="cover-inner">
         <h1 className="mb-4">JosePauloCamp</h1>
         <p className="lead">

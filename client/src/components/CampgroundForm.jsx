@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createCampground, updateCampground } from '../api/campgrounds';
 import { useFlash } from '../context/FlashContext';
+import { useUnsavedChanges } from '../hooks/useUnsavedChanges';
 import SubmitButton from './ui/SubmitButton';
 
 const campgroundSchema = z.object({
@@ -25,7 +26,7 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({
     resolver: zodResolver(campgroundSchema),
     defaultValues: {
@@ -35,6 +36,9 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
       description: initialData.description || '',
     },
   });
+
+  // Warn user about unsaved changes
+  useUnsavedChanges(isDirty && !isSubmitting);
 
   useEffect(() => {
     if (isEdit && initialData) {

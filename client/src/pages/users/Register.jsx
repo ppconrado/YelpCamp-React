@@ -8,11 +8,12 @@ import { useFlash } from '../../context/FlashContext';
 import { useAuth } from '../../context/AuthContext';
 import CenteredCard from '../../components/ui/CenteredCard';
 import SubmitButton from '../../components/ui/SubmitButton';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 
 const registerSchema = z.object({
   username: z.string().min(3, 'Username deve ter pelo menos 3 caracteres'),
   email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Password deve ter pelo menos 6 caracteres'),
+  password: z.string().min(6, 'Password deve ter pelo menos 8 caracteres'),
 });
 
 const Register = () => {
@@ -24,7 +25,7 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -33,6 +34,8 @@ const Register = () => {
       password: '',
     },
   });
+
+  useUnsavedChanges(isDirty && !isSubmitting);
 
   const onSubmit = async (data) => {
     try {

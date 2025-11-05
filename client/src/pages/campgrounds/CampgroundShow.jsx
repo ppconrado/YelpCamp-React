@@ -109,7 +109,7 @@ const CampgroundShow = () => {
       {/* Top section: Images/details (left) and Map (right) */}
       <div className="row">
         <div className="col-md-8">
-          <div className="card mb-4">
+          <div className="card mb-4 shadow-sm" style={{ backgroundColor: '#fff' }}>
             {campground.images && campground.images.length > 0 && (
               <ImageCarousel
                 images={campground.images}
@@ -121,16 +121,16 @@ const CampgroundShow = () => {
             )}
             <div className="card-body">
               <h5 className="card-title">{campground.title}</h5>
-              <p className="card-text">{campground.description}</p>
+              <p className="card-text text-secondary">{campground.description}</p>
             </div>
             <ul className="list-group list-group-flush">
-              <li className="list-group-item text-muted">
+              <li className="list-group-item text-muted" style={{ backgroundColor: '#f8f9fa' }}>
                 {campground.location}
               </li>
-              <li className="list-group-item">
+              <li className="list-group-item" style={{ backgroundColor: '#fff' }}>
                 Submitted by {campground.author.username}
               </li>
-              <li className="list-group-item">${campground.price}</li>
+              <li className="list-group-item fw-bold" style={{ backgroundColor: '#fff' }}>${campground.price}</li>
             </ul>
             {isAuthor && (
               <div className="card-body d-flex gap-2">
@@ -145,11 +145,11 @@ const CampgroundShow = () => {
                 </button>
               </div>
             )}
-            <div className="card-footer text-muted">2 days ago</div>
+            <div className="card-footer text-muted" style={{ backgroundColor: '#f8f9fa' }}>2 days ago</div>
           </div>
         </div>
         <div className="col-md-4">
-          <div className="card mb-4 sticky-md">
+          <div className="card mb-4 sticky-md shadow-sm">
             <div className="card-body p-0">
               <MapboxMap
                 geoJson={geoJson}
@@ -165,15 +165,15 @@ const CampgroundShow = () => {
       {/* Bottom section: Reviews list (left) and form (right) */}
       <div className="row mt-4">
         <div className="col-md-8">
-          <h2>Reviews</h2>
+          <h2 className="mb-4">Reviews</h2>
           {campground.reviews.map((review) => (
-            <div key={review._id} className="card mb-4">
+            <div key={review._id} className="card mb-4 shadow-sm" style={{ backgroundColor: '#fff' }}>
               <div className="card-body">
                 <h6 className="card-subtitle mb-2 text-muted">
                   By {review.author.username}
                 </h6>
                 <p className="card-text">Rating: {review.rating}</p>
-                <p className="card-text">{review.body}</p>
+                <p className="card-text text-secondary">{review.body}</p>
                 {currentUser && review.author._id === currentUser._id && (
                   <button
                     className="btn btn-sm btn-danger"
@@ -188,7 +188,7 @@ const CampgroundShow = () => {
         </div>
         <div className="col-md-4">
           {currentUser && (
-            <div className="card">
+            <div className="card shadow-sm" style={{ backgroundColor: '#fff' }}>
               <div className="card-body">
                 <ReviewForm
                   campgroundId={campground._id}

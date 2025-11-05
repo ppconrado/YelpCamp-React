@@ -8,6 +8,7 @@ import { useFlash } from '../../context/FlashContext';
 import { useAuth } from '../../context/AuthContext';
 import CenteredCard from '../../components/ui/CenteredCard';
 import SubmitButton from '../../components/ui/SubmitButton';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username é obrigatório'),
@@ -24,7 +25,7 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -32,6 +33,8 @@ const Login = () => {
       password: '',
     },
   });
+
+  useUnsavedChanges(isDirty && !isSubmitting);
 
   const onSubmit = async (data) => {
     try {
