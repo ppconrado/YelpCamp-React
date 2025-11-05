@@ -5,7 +5,10 @@ import { useEffect, useCallback } from 'react';
  * @param {boolean} isDirty - Whether the form has unsaved changes
  * @param {string} message - Custom warning message
  */
-export const useUnsavedChanges = (isDirty, message = 'You have unsaved changes. Are you sure you want to leave?') => {
+export const useUnsavedChanges = (
+  isDirty,
+  message = 'You have unsaved changes. Are you sure you want to leave?'
+) => {
   const handleBeforeUnload = useCallback(
     (e) => {
       if (isDirty) {

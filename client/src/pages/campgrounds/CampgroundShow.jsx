@@ -109,7 +109,10 @@ const CampgroundShow = () => {
       {/* Top section: Images/details (left) and Map (right) */}
       <div className="row">
         <div className="col-md-8">
-          <div className="card mb-4 shadow-sm" style={{ backgroundColor: '#fff' }}>
+          <div
+            className="card mb-4 shadow-sm"
+            style={{ backgroundColor: '#fff' }}
+          >
             {campground.images && campground.images.length > 0 && (
               <ImageCarousel
                 images={campground.images}
@@ -121,16 +124,29 @@ const CampgroundShow = () => {
             )}
             <div className="card-body">
               <h5 className="card-title">{campground.title}</h5>
-              <p className="card-text text-secondary">{campground.description}</p>
+              <p className="card-text text-secondary">
+                {campground.description}
+              </p>
             </div>
             <ul className="list-group list-group-flush">
-              <li className="list-group-item text-muted" style={{ backgroundColor: '#f8f9fa' }}>
+              <li
+                className="list-group-item text-muted"
+                style={{ backgroundColor: '#f8f9fa' }}
+              >
                 {campground.location}
               </li>
-              <li className="list-group-item" style={{ backgroundColor: '#fff' }}>
+              <li
+                className="list-group-item"
+                style={{ backgroundColor: '#fff' }}
+              >
                 Submitted by {campground.author.username}
               </li>
-              <li className="list-group-item fw-bold" style={{ backgroundColor: '#fff' }}>${campground.price}</li>
+              <li
+                className="list-group-item fw-bold"
+                style={{ backgroundColor: '#fff' }}
+              >
+                ${campground.price}
+              </li>
             </ul>
             {isAuthor && (
               <div className="card-body d-flex gap-2">
@@ -145,7 +161,12 @@ const CampgroundShow = () => {
                 </button>
               </div>
             )}
-            <div className="card-footer text-muted" style={{ backgroundColor: '#f8f9fa' }}>2 days ago</div>
+            <div
+              className="card-footer text-muted"
+              style={{ backgroundColor: '#f8f9fa' }}
+            >
+              2 days ago
+            </div>
           </div>
         </div>
         <div className="col-md-4">
@@ -167,7 +188,11 @@ const CampgroundShow = () => {
         <div className="col-md-8">
           <h2 className="mb-4">Reviews</h2>
           {campground.reviews.map((review) => (
-            <div key={review._id} className="card mb-4 shadow-sm" style={{ backgroundColor: '#fff' }}>
+            <div
+              key={review._id}
+              className="card mb-4 shadow-sm"
+              style={{ backgroundColor: '#fff' }}
+            >
               <div className="card-body">
                 <h6 className="card-subtitle mb-2 text-muted">
                   By {review.author.username}
