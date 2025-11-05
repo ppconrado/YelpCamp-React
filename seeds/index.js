@@ -1,9 +1,16 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const mongoose = require("mongoose");
 const cities = require("./cities");
 const { places, descriptors } = require("./seedHelpers");
 const Campground = require("../models/campground");
 
-mongoose.connect("mongodb://localhost:27017/yelp-camp", {
+// Usa DB_URL do .env quando disponível (Atlas/produção) ou localhost em desenvolvimento
+const seedDbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
+
+mongoose.connect(seedDbUrl, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
