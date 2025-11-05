@@ -1,0 +1,243 @@
+/* Importar Bootstrap (assumindo que o projeto original usava) */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Estilos globais para a aplicação */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Default site background for non-home pages */
+body:not(.home-hero) {
+  /* Use a darker neutral for better card contrast */
+  --bs-body-bg: #dee2e6; /* Bootstrap gray-300 */
+  background-color: var(--bs-body-bg) !important;
+}
+
+main {
+  flex-grow: 1;
+}
+
+/* Estilo para a página inicial (Home.jsx) */
+.cover-container {
+  height: 100vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('https://images.unsplash.com/photo-1559521783-1d1599583485?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80');
+  background-size: cover;
+  background-position: center;
+  text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.5);
+  padding: 0;
+  margin: -5rem -15px 0 -15px; /* Ajuste para cobrir a área da main */
+}
+
+.cover-inner {
+  max-width: 60vw;
+}
+
+.btn-secondary,
+.btn-secondary:hover {
+  color: #333;
+  text-shadow: none; /* Prevent inheritance from `body` */
+}
+
+/* Carousel thumbnails polish */
+.carousel-thumbs img {
+  border-radius: 6px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    outline-color 0.15s ease;
+}
+
+.carousel-thumbs button[aria-current='true'] img {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+  transform: translateY(-1px);
+}
+
+/* Hover/focus effects for thumbnails */
+.carousel-thumbs button:hover img,
+.carousel-thumbs button:focus img {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1);
+}
+
+.carousel-thumbs button:hover,
+.carousel-thumbs button:focus {
+  opacity: 1 !important;
+}
+
+/* Consistent main carousel image aspect */
+.carousel-main-img {
+  height: 420px;
+  object-fit: cover;
+}
+
+@media (max-width: 576px) {
+  .carousel-main-img {
+    height: 260px;
+  }
+}
+
+/* Gradient overlay for carousel images */
+.carousel-item {
+  position: relative;
+}
+
+.carousel-gradient-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 45%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.carousel .carousel-caption {
+  z-index: 2;
+}
+
+/* Smooth thumbnail active animation */
+.carousel-thumbs button {
+  transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-thumbs button[aria-current='true'] img {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Sticky map on md+ screens */
+.sticky-md {
+  position: static;
+}
+
+@media (min-width: 768px) {
+  .sticky-md {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+/* Carousel indicators polish */
+.carousel .carousel-indicators [data-bs-target] {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(var(--bs-primary-rgb), 0.5);
+}
+
+.carousel .carousel-indicators .active {
+  background-color: rgba(var(--bs-primary-rgb), 1);
+}
+
+/* Hide indicators on small screens when thumbnails exist */
+@media (max-width: 576px) {
+  .carousel.has-thumbs .carousel-indicators {
+    display: none;
+  }
+}
+
+/* Always hide indicators when thumbnails exist (desktop too) */
+.carousel.has-thumbs .carousel-indicators {
+  display: none;
+}
+
+/* Campgrounds index card polish */
+.camp-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.camp-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.camp-card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Campgrounds list page background (subtle gray so cards stand out) */
+body.camp-list-bg {
+  /* Override Bootstrap body background via CSS variable and property */
+  --bs-body-bg: #dee2e6; /* match non-home darker bg */
+  background-color: var(--bs-body-bg) !important;
+}
+
+/* Ensure main container remains transparent so body bg is visible */
+body.camp-list-bg main.container {
+  background: transparent;
+}
+
+/* Map card styling to match campground cards */
+.map-card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+/* Original homepage body-wide hero styling (applied via Home.jsx) */
+body.home-hero {
+  height: 100vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('https://images.unsplash.com/photo-1559521783-1d1599583485?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80');
+  background-size: cover;
+  background-position: center;
+  text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.5);
+}
+
+/* When on home hero, make the cover container transparent and remove offsets */
+body.home-hero .cover-container {
+  height: 100vh;
+  background: none;
+  margin: 0;
+  box-shadow: none !important;
+  position: relative;
+}
+
+/* Remove default top spacing from Layout's main container only on home */
+body.home-hero main.container {
+  margin-top: 0;
+}
+
+/* Bottom-centered tagline on Home */
+.home-hero-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2rem;
+  text-align: center;
+}
+
+/* Home-specific navbar link styles to mimic original */
+body.home-hero .nav-link {
+  padding: 0.25rem 0;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 1rem;
+  border-bottom: 0.25rem solid transparent;
+}
+
+body.home-hero .nav-link:hover {
+  color: rgba(255, 255, 255, 0.75);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+}
+
+body.home-hero .nav-link.active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
