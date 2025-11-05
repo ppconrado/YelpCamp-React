@@ -39,7 +39,10 @@ const CampgroundEdit = () => {
   }
 
   return (
-    <CenteredCard title="Edit Campground" subtitle="Atualize as informações do camping">
+    <CenteredCard
+      title="Edit Campground"
+      subtitle="Atualize as informações do camping"
+    >
       <CampgroundForm initialData={campground} isEdit={true} />
     </CenteredCard>
   );
