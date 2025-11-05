@@ -108,14 +108,14 @@ const Footer = () => (
 
 const Layout = () => {
   return (
-    <>
+    <div className="d-flex flex-column min-vh-100">
       <Navbar />
-      <main className="container mt-5">
+      <main className="container mt-5" style={{ flexGrow: 1 }}>
         <FlashMessage />
         <Outlet />
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 
