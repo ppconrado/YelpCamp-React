@@ -11,7 +11,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="cover-container d-flex flex-column justify-content-center align-items-center text-center text-white" style={{ minHeight: '100vh' }}>
+    <div className="cover-container d-flex flex-column justify-content-center align-items-center text-center text-white">
       <div className="cover-inner">
         <h1 className="mb-4">JosePauloCamp</h1>
         <p className="lead">
@@ -27,9 +27,6 @@ const Home = () => {
             Visite os Acampamentos
           </Link>
         </p>
-      </div>
-      <div className="home-hero-bottom">
-        <p className="text-white-50 mb-0">&copy; 2025 JosePauloCamp</p>
       </div>
     </div>
   );

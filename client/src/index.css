@@ -210,7 +210,7 @@ body.home-hero {
 
 /* When on home hero, make the cover container transparent and remove offsets */
 body.home-hero .cover-container {
-  height: 100vh;
+  min-height: calc(100vh - 56px - 60px); /* viewport minus navbar and footer */
   background: none;
   margin: 0;
   box-shadow: none !important;
@@ -220,15 +220,17 @@ body.home-hero .cover-container {
 /* Remove default top spacing from Layout's main container only on home */
 body.home-hero main.container {
   margin-top: 0;
+  padding: 0;
+  max-width: 100%;
 }
 
-/* Bottom-centered tagline on Home */
-.home-hero-bottom {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 2rem;
-  text-align: center;
+/* Style footer on home page to match hero theme */
+body.home-hero .footer {
+  background-color: transparent !important;
+}
+
+body.home-hero .footer .text-muted {
+  color: rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Home-specific navbar link styles to mimic original */
