@@ -209,7 +209,7 @@ body.home-hero {
 
 /* When on home hero, make the cover container transparent and remove offsets */
 body.home-hero .cover-container {
-  min-height: calc(100vh - 56px - 60px); /* viewport minus navbar and footer */
+  min-height: calc(100vh - 56px); /* viewport minus navbar only */
   background: none;
   margin: 0;
   box-shadow: none !important;
@@ -223,14 +223,18 @@ body.home-hero main.container {
   max-width: 100%;
 }
 
-/* Style footer on home page to match hero theme */
+/* Hide the Layout footer on home page (we use inline footer) */
 body.home-hero .footer {
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  backdrop-filter: blur(10px);
+  display: none;
 }
 
-body.home-hero .footer .text-muted {
-  color: rgba(255, 255, 255, 0.8) !important;
+/* Home page inline footer positioned at bottom of hero */
+.home-hero-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2rem;
+  text-align: center;
 }
 
 /* Home-specific navbar link styles to mimic original */

@@ -28,6 +28,9 @@ const Home = () => {
           </Link>
         </p>
       </div>
+      <div className="home-hero-footer">
+        <p className="text-white-50 mb-0">&copy; 2025 JosePauloCamp</p>
+      </div>
     </div>
   );
 };
