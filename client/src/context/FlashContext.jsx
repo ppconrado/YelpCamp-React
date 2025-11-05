@@ -22,7 +22,9 @@ export const FlashProvider = ({ children }) => {
   };
 
   return (
-    <FlashContext.Provider value={{ showFlash, clearFlash, flashMessage: null }}>
+    <FlashContext.Provider
+      value={{ showFlash, clearFlash, flashMessage: null }}
+    >
       {children}
     </FlashContext.Provider>
   );

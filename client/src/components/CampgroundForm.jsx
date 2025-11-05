@@ -11,7 +11,9 @@ const campgroundSchema = z.object({
   title: z.string().min(3, 'Título deve ter pelo menos 3 caracteres'),
   location: z.string().min(3, 'Localização deve ter pelo menos 3 caracteres'),
   price: z.coerce.number().min(0, 'Preço deve ser maior ou igual a zero'),
-  description: z.string().min(10, 'Descrição deve ter pelo menos 10 caracteres'),
+  description: z
+    .string()
+    .min(10, 'Descrição deve ter pelo menos 10 caracteres'),
 });
 
 const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
@@ -65,13 +67,19 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
       showFlash(response.message, 'success');
       navigate(`/campgrounds/${response.campground._id}`);
     } catch (error) {
-      const errorMessage = error.response?.data?.error || 'Erro ao salvar acampamento.';
+      const errorMessage =
+        error.response?.data?.error || 'Erro ao salvar acampamento.';
       showFlash(errorMessage, 'error');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="validated-form" encType="multipart/form-data" noValidate>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="validated-form"
+      encType="multipart/form-data"
+      noValidate
+    >
       <div className="form-floating mb-3">
         <input
           type="text"
@@ -101,7 +109,9 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
       </div>
 
       <div className="mb-3">
-        <label className="form-label" htmlFor="price">Campground Price</label>
+        <label className="form-label" htmlFor="price">
+          Campground Price
+        </label>
         <div className="input-group">
           <span className="input-group-text">$</span>
           <input
@@ -133,7 +143,9 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
       </div>
 
       <div className="mb-3">
-        <label htmlFor="image" className="form-label">Add Image</label>
+        <label htmlFor="image" className="form-label">
+          Add Image
+        </label>
         <input
           className="form-control"
           type="file"

@@ -57,7 +57,11 @@ const Register = () => {
         </p>
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="validated-form" noValidate>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="validated-form"
+        noValidate
+      >
         <div className="form-floating mb-3">
           <input
             type="text"
