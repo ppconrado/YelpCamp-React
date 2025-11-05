@@ -36,7 +36,8 @@ const Register = () => {
       showFlash(response.message, 'success');
       navigate('/campgrounds');
     } catch (error) {
-      const errorMessage = error.response?.data?.error || 'Erro ao registrar usuário.';
+      const errorMessage =
+        error.response?.data?.error || 'Erro ao registrar usuário.';
       showFlash(errorMessage, 'error');
     } finally {
       setLoading(false);

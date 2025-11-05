@@ -37,7 +37,9 @@ const Login = () => {
       const redirectTo = location.state?.from?.pathname || '/campgrounds';
       navigate(redirectTo);
     } catch (error) {
-      const errorMessage = error.response?.data?.error || 'Erro ao fazer login. Verifique suas credenciais.';
+      const errorMessage =
+        error.response?.data?.error ||
+        'Erro ao fazer login. Verifique suas credenciais.';
       showFlash(errorMessage, 'error');
     } finally {
       setLoading(false);

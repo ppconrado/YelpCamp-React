@@ -1,6 +1,18 @@
 import React from 'react';
 
-const FormInput = ({ id, label, type = 'text', value, onChange, name, required = true, autoComplete, autoFocus, help, rightSlot }) => {
+const FormInput = ({
+  id,
+  label,
+  type = 'text',
+  value,
+  onChange,
+  name,
+  required = true,
+  autoComplete,
+  autoFocus,
+  help,
+  rightSlot,
+}) => {
   return (
     <div className="mb-3">
       {label && (
