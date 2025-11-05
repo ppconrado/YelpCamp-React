@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import CampgroundIndex from './pages/campgrounds/CampgroundIndex';
 import CampgroundShow from './pages/campgrounds/CampgroundShow';
@@ -15,9 +16,23 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="campgrounds" element={<CampgroundIndex />} />
-        <Route path="campgrounds/new" element={<CampgroundNew />} />
+        <Route
+          path="campgrounds/new"
+          element={
+            <ProtectedRoute>
+              <CampgroundNew />
+            </ProtectedRoute>
+          }
+        />
         <Route path="campgrounds/:id" element={<CampgroundShow />} />
-        <Route path="campgrounds/:id/edit" element={<CampgroundEdit />} />
+        <Route
+          path="campgrounds/:id/edit"
+          element={
+            <ProtectedRoute>
+              <CampgroundEdit />
+            </ProtectedRoute>
+          }
+        />
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="*" element={<h1>404 - Not Found</h1>} />

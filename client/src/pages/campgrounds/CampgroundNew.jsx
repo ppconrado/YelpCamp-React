@@ -1,12 +1,12 @@
 import React from 'react';
 import CampgroundForm from '../../components/CampgroundForm';
+import CenteredCard from '../../components/ui/CenteredCard';
 
 const CampgroundNew = () => {
   return (
-    <div>
-      <h1>New Campground</h1>
+    <CenteredCard title="New Campground" subtitle="Compartilhe um novo local para acampar">
       <CampgroundForm />
-    </div>
+    </CenteredCard>
   );
 };
 

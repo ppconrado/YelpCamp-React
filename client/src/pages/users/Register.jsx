@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/auth';
 import { useFlash } from '../../context/FlashContext';
 import { useAuth } from '../../context/AuthContext';
+import CenteredCard from '../../components/ui/CenteredCard';
+import FormInput from '../../components/ui/FormInput';
+import SubmitButton from '../../components/ui/SubmitButton';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +14,7 @@ const Register = () => {
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { showFlash } = useFlash();
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -40,52 +44,54 @@ const Register = () => {
   };
 
   return (
-    <div className="row">
-      <h1 className="text-center">Register</h1>
-      <div className="col-6 offset-3">
-        <form onSubmit={handleSubmit} className="validated-form" noValidate>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="username">Username</label>
-            <input
-              className="form-control"
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="email">Email</label>
-            <input
-              className="form-control"
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="password">Password</label>
-            <input
-              className="form-control"
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <button className="btn btn-success btn-block" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
-          </button>
-        </form>
-      </div>
-    </div>
+    <CenteredCard
+      title="Create account"
+      subtitle="Registre-se para começar a compartilhar seus campings favoritos"
+      footer={
+        <p className="mb-0">
+          Já tem conta? <Link to="/login">Entre</Link>
+        </p>
+      }
+    >
+      <form onSubmit={handleSubmit} className="validated-form" noValidate>
+        <FormInput
+          id="username"
+          label="Username"
+          value={formData.username}
+          onChange={handleChange}
+          autoComplete="username"
+          autoFocus
+        />
+        <FormInput
+          id="email"
+          type="email"
+          label="Email"
+          value={formData.email}
+          onChange={handleChange}
+          autoComplete="email"
+        />
+        <FormInput
+          id="password"
+          label="Password"
+          type={showPassword ? 'text' : 'password'}
+          value={formData.password}
+          onChange={handleChange}
+          autoComplete="new-password"
+          rightSlot={
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              title={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          }
+        />
+        <SubmitButton loading={loading}>Register</SubmitButton>
+      </form>
+    </CenteredCard>
   );
 };
 

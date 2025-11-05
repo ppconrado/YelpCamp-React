@@ -15,6 +15,14 @@ body {
   padding: 0;
 }
 
+/* Centered card helpers for auth and forms */
+.centered-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
 /* Default site background for non-home pages */
 body:not(.home-hero) {
   /* Use a darker neutral for better card contrast */
