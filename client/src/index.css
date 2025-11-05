@@ -199,13 +199,12 @@ body.camp-list-bg main.container {
 
 /* Original homepage body-wide hero styling (applied via Home.jsx) */
 body.home-hero {
-  height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url('https://images.unsplash.com/photo-1559521783-1d1599583485?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80');
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
   text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5);
-  box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.5);
 }
 
 /* When on home hero, make the cover container transparent and remove offsets */
@@ -226,11 +225,12 @@ body.home-hero main.container {
 
 /* Style footer on home page to match hero theme */
 body.home-hero .footer {
-  background-color: transparent !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px);
 }
 
 body.home-hero .footer .text-muted {
-  color: rgba(255, 255, 255, 0.5) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 /* Home-specific navbar link styles to mimic original */
