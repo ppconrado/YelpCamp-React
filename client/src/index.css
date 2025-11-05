@@ -249,3 +249,37 @@ body.home-hero .nav-link.active {
   color: #fff;
   border-bottom-color: #fff;
 }
+
+/* ------------------------------
+   Forms: improve contrast & focus
+------------------------------- */
+.validated-form .form-label {
+  font-weight: 600;
+}
+
+.validated-form .form-control,
+.validated-form .form-select,
+.validated-form textarea {
+  background-color: #fff; /* ensure white surface inside gray pages */
+  border-color: #a6b2bd; /* slightly darker than default for contrast */
+}
+
+.validated-form .input-group-text {
+  background-color: #f8f9fa;
+  border-color: #a6b2bd;
+  color: #495057;
+}
+
+.validated-form .form-control::placeholder,
+.validated-form textarea::placeholder {
+  color: #6c757d;
+  opacity: 0.75;
+}
+
+.validated-form .form-control:focus,
+.validated-form .form-select:focus,
+.validated-form textarea:focus {
+  background-color: #fff;
+  border-color: #0d6efd; /* bootstrap primary */
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}

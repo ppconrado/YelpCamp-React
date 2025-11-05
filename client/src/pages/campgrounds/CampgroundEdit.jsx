@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import CampgroundForm from '../../components/CampgroundForm';
 import { getCampground } from '../../api/campgrounds';
 import { useFlash } from '../../context/FlashContext';
+import CenteredCard from '../../components/ui/CenteredCard';
 
 const CampgroundEdit = () => {
   const [campground, setCampground] = useState(null);
@@ -38,10 +39,9 @@ const CampgroundEdit = () => {
   }
 
   return (
-    <div>
-      <h1>Edit Campground</h1>
+    <CenteredCard title="Edit Campground" subtitle="Atualize as informações do camping">
       <CampgroundForm initialData={campground} isEdit={true} />
-    </div>
+    </CenteredCard>
   );
 };
 
