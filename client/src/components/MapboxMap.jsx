@@ -15,6 +15,8 @@ const MapboxMap = ({
   spinOnLoad = false, // rotate the globe (continuous gentle spin)
   // Limit how far the map will zoom in when fitting to current page markers (keeps pages consistent)
   fitMaxZoom = 3,
+  // Desabilitar interação do mapa em telas pequenas para não atrapalhar o scroll da página
+  disableInteractionOnMobile = false,
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -44,6 +46,22 @@ const MapboxMap = ({
       try {
         if (projection && typeof map.current.setProjection === 'function') {
           map.current.setProjection(projection);
+        }
+        // Em telas pequenas, desabilitar interações que dificultam o scroll vertical
+        const isSmallScreen =
+          typeof window !== 'undefined' &&
+          window.matchMedia &&
+          window.matchMedia('(max-width: 767px)').matches;
+        if (disableInteractionOnMobile && isSmallScreen) {
+          try {
+            map.current.dragPan.disable();
+            map.current.scrollZoom.disable();
+            map.current.touchZoomRotate.disable();
+            map.current.doubleClickZoom.disable();
+            // manter popups e cliques em marcadores funcionais
+          } catch {
+            // ignore
+          }
         }
         // Optional initial full spin for visibility
         if (spinOnLoad) {

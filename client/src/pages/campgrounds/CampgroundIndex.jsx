@@ -115,6 +115,8 @@ const CampgroundIndex = () => {
           zoom={3}
           // Allow auto fit to markers to restore the original globe movement
           fitToBounds={true}
+          // Evitar que o mapa capture o gesto de scroll em telas pequenas
+          disableInteractionOnMobile={true}
           height={450}
         />
       </div>

@@ -47,7 +47,8 @@ body.camp-scroll main.container {
   /* Remover o offset padrão e controlar altura manualmente */
   margin-top: 0 !important;
   padding-top: 1rem;
-  height: calc(100vh - 56px - var(--footer-h)); /* navbar(56) + footer */
+  height: calc(100vh - 56px - var(--footer-h)); /* fallback */
+  height: calc(100dvh - 56px - var(--footer-h)); /* usar dvh em navegadores modernos/mobile */
   overflow: hidden; /* evita scroll da página, só do conteúdo interno */
   /* Melhorar comportamento em iOS */
   position: relative;
@@ -219,11 +220,11 @@ body.camp-scroll .footer {
   background-color: #f8f9fa;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding: 0.5rem 0;
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
   /* Evitar que interfira com scroll em iOS */
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  touch-action: none; /* desabilitar gestos no pager */
 }
 
 /* Campgrounds index card polish */
