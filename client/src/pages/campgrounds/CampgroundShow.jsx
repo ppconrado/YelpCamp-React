@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { getCampground, deleteCampground } from '../../api/campgrounds';
 import { deleteReview } from '../../api/reviews';
 import MapboxMap from '../../components/MapboxMap';
@@ -19,6 +19,8 @@ const CampgroundShow = () => {
   const { showFlash } = useFlash();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnPage = searchParams.get('from') || '1';
 
   const handleReviewAdded = (newReview) => {
     setCampground((prev) => ({
@@ -115,6 +117,21 @@ const CampgroundShow = () => {
 
   return (
     <div className="camp-scroll-inner">
+      {/* Breadcrumb / Back button */}
+      <nav aria-label="breadcrumb" className="mb-3">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="breadcrumb-item">
+            <Link to={`/campgrounds?page=${returnPage}`}>Campgrounds</Link>
+          </li>
+          <li className="breadcrumb-item active" aria-current="page">
+            {campground.title}
+          </li>
+        </ol>
+      </nav>
+
       {/* Top section: Images/details (left) and Map (right) */}
       <div className="row">
         <div className="col-md-8">

@@ -143,7 +143,7 @@ const CampgroundIndex = () => {
                   <small className="text-muted">{campground.location}</small>
                 </p>
                 <Link
-                  to={`/campgrounds/${campground._id}`}
+                  to={`/campgrounds/${campground._id}?from=${pageFromUrl}`}
                   className="stretched-link"
                   aria-label={`Ver ${campground.title}`}
                 />
