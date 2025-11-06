@@ -13,6 +13,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 
 const path = require('path');
+const fs = require('fs');
 const mongoose = require('mongoose');
 // const ejsMate = require("ejs-mate"); // REMOVIDO: Não usaremos mais EJS
 const session = require('express-session');
@@ -223,18 +224,24 @@ app.use('/api/campgrounds', campgroundRoutes);
 app.use('/api/campgrounds/:id/reviews', reviewRoutes);
 
 // ROTA DE FALLBACK PARA SERVIR O FRONTEND
-// Em produção, servir o build do React (client/dist). Em desenvolvimento, mensagem simples.
+// Em produção local/monorepo servimos o build do React (client/dist) SE existir.
+// No Render (backend-only), o client/dist não existe; então respondemos com uma mensagem da API.
 const clientBuildPath = path.join(__dirname, 'client', 'dist');
-if (process.env.NODE_ENV === 'production') {
+const clientIndexPath = path.join(clientBuildPath, 'index.html');
+const hasClientBuild = fs.existsSync(clientIndexPath);
+
+if (process.env.NODE_ENV === 'production' && hasClientBuild) {
   app.use(express.static(clientBuildPath));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
+    res.sendFile(clientIndexPath);
   });
 } else {
+  // Backend-only (ex.: Render Free) ou ambiente de desenvolvimento
+  app.get('/', (req, res) => {
+    res.json({ status: 'ok', message: 'YelpCamp API running' });
+  });
   app.get('*', (req, res) => {
-    res.send(
-      'Frontend React em desenvolvimento. Use /api para acessar os endpoints.'
-    );
+    res.status(404).json({ error: 'Not Found', hint: 'Use /api endpoints' });
   });
 }
 
