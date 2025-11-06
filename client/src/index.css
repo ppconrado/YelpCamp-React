@@ -287,6 +287,20 @@ body.home-hero .cover-container {
   position: relative;
 }
 
+/* Ensure CTA never sits under the floating footer on small screens */
+@media (max-width: 576px) {
+  .home-hero-content {
+    padding-bottom: calc(90px + env(safe-area-inset-bottom)); /* space for fixed footer chip + breathing room */
+  }
+  .home-cta-btn {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+  .home-hero-footer {
+    bottom: calc(0.5rem + env(safe-area-inset-bottom)); /* slightly lower to free CTA area */
+  }
+}
+
 /* Remove default top spacing from Layout's main container only on home */
 body.home-hero main.container {
   margin-top: 0;

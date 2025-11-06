@@ -11,7 +11,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="cover-container d-flex flex-column justify-content-center align-items-center text-center text-white">
+    <div className="cover-container d-flex flex-column justify-content-center align-items-center text-center text-white home-hero-content">
       <div className="cover-inner">
         <h1 className="mb-4">JosePauloCamp</h1>
         <p className="lead">
@@ -19,10 +19,10 @@ const Home = () => {
           Pule para o ar livre! <br />
           Compartilhe seus acampamentos favoritos com o mundo.
         </p>
-        <p className="lead">
+        <p className="lead cta-wrapper">
           <Link
             to="/campgrounds"
-            className="btn btn-lg btn-light fw-bold border-white text-dark"
+            className="btn btn-lg btn-light fw-bold border-white text-dark home-cta-btn"
           >
             Visite os Acampamentos
           </Link>
