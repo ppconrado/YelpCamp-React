@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getCampgrounds } from '../../api/campgrounds';
 import MapboxMap from '../../components/MapboxMap';
+import CardSkeleton from '../../components/ui/CardSkeleton';
 import { useFlash } from '../../context/FlashContext';
 
 const CampgroundIndex = () => {
@@ -64,10 +65,6 @@ const CampgroundIndex = () => {
     }
   }, [loading, pageFromUrl]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   // Criar GeoJSON para o mapa de cluster
   const geoJson = {
     type: 'FeatureCollection',
@@ -87,6 +84,26 @@ const CampgroundIndex = () => {
     setSearchParams({ page: String(next) });
     setLoading(true);
   };
+
+  if (loading) {
+    return (
+      <div className="camp-scroll-inner" ref={scrollContainerRef}>
+        <h1 className="mb-4">All Campgrounds</h1>
+        <div className="map-card mb-4">
+          <div
+            style={{
+              height: '450px',
+              backgroundColor: '#e0e0e0',
+              animation: 'skeleton-pulse 1.5s ease-in-out infinite',
+            }}
+          />
+        </div>
+        {[...Array(6)].map((_, index) => (
+          <CardSkeleton key={index} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="camp-scroll-inner" ref={scrollContainerRef}>

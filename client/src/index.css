@@ -337,3 +337,23 @@ body.home-hero .nav-link.active {
   border-color: #0d6efd; /* bootstrap primary */
   box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
 }
+
+/* ------------------------------
+   Loading Skeletons
+------------------------------- */
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.skeleton-img {
+  width: 100%;
+  display: block;
+}

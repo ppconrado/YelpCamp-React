@@ -6,6 +6,7 @@ import MapboxMap from '../../components/MapboxMap';
 import ReviewForm from '../../components/ReviewForm';
 import ImageCarousel from '../../components/ImageCarousel';
 import ConfirmModal from '../../components/ui/ConfirmModal';
+import DetailSkeleton from '../../components/ui/DetailSkeleton';
 import { useFlash } from '../../context/FlashContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -86,7 +87,7 @@ const CampgroundShow = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <DetailSkeleton />;
   }
 
   if (!campground) {
