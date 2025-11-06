@@ -1,6 +1,4 @@
-# Backend Improvements - JosePauloCamp (English Only)
-
-Removed legacy Portuguese intro. This document is fully standardized in English.
+# Backend Improvements - JosePauloCamp
 # Backend Improvements - JosePauloCamp
 
 ## 🎯 Implemented Improvements
