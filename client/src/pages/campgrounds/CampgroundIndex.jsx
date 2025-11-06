@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getCampgrounds } from '../../api/campgrounds';
 import MapboxMap from '../../components/MapboxMap';
@@ -17,6 +17,7 @@ const CampgroundIndex = () => {
   const [loading, setLoading] = useState(true);
   const { showFlash } = useFlash();
   const [searchParams, setSearchParams] = useSearchParams();
+  const scrollContainerRef = useRef(null);
 
   const pageFromUrl = Math.max(
     1,
@@ -49,6 +50,12 @@ const CampgroundIndex = () => {
     document.body.classList.add('camp-list-bg');
     // Enable inner scrolling with static footer/header on this page
     document.body.classList.add('camp-scroll');
+    
+    // Scroll to top when page changes
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
     return () => {
       document.body.classList.remove('camp-list-bg');
       document.body.classList.remove('camp-scroll');
@@ -80,7 +87,7 @@ const CampgroundIndex = () => {
   };
 
   return (
-    <div className="camp-scroll-inner">
+    <div className="camp-scroll-inner" ref={scrollContainerRef}>
       <h1 className="mb-4">All Campgrounds</h1>
       <div className="map-card mb-4">
         <MapboxMap
