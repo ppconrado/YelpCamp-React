@@ -1,12 +1,6 @@
-# Melhorias no Backend - JosePauloCamp
+# Backend Improvements - JosePauloCamp (English Only)
 
-## 🎯 Melhorias Implementadas
-
-### 1. **Tratamento de Erros Aprimorado**
-
-- Middleware centralizado de erros com logging detalhado
-- Stack trace visível apenas em desenvolvimento
-- Respostas JSON padronizadas para todas as rotas de API
+Removed legacy Portuguese intro. This document is fully standardized in English.
 # Backend Improvements - JosePauloCamp
 
 ## 🎯 Implemented Improvements
@@ -171,4 +165,4 @@ PORT=3000
 - Text index supports `{ $text: { $search: "beach camping" } }`
 - `Set-Cookie` header exposed via CORS; cookies use `SameSite=None` + `Secure` in production
 - SPA fallback excludes `/api/*` via negative regex to prevent HTML responses on API calls
-6. **Tests**: Testes unitários (Jest) e E2E (Cypress)
+6. **Tests**: Unit tests (Jest) and E2E (Cypress)
