@@ -47,5 +47,3 @@ router.get("/current-user", (req, res) => {
 });
 
 module.exports = router;
-
-module.exports = router;

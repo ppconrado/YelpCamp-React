@@ -6,6 +6,12 @@ const Review = require("./models/review");
 // MIDDLEWARE - AUTENTICACAO DO USUARIO
 module.exports.isLoggedIn = (req, res, next) => {
   // Passport
+  console.log('isLoggedIn check:', {
+    isAuthenticated: req.isAuthenticated(),
+    sessionID: req.sessionID,
+    hasSession: !!req.session,
+    user: req.user ? req.user.username : 'none',
+  });
   if (!req.isAuthenticated()) {
     //
     // Retorna JSON em vez de redirecionar

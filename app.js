@@ -136,7 +136,7 @@ const sessionConfig = {
   name: 'session',
   secret,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false, // Não criar sessão vazia até que algo seja armazenado
   // cookie
   cookie: {
     httpOnly: true,
@@ -233,6 +233,17 @@ app.head('/health', (req, res) => {
 });
 app.get('/version', (req, res) => {
   res.json({ name, version, node: process.version, env: process.env.NODE_ENV });
+});
+
+// Debug endpoint para verificar autenticação (remover em produção final)
+app.get('/api/debug/session', (req, res) => {
+  res.json({
+    isAuthenticated: req.isAuthenticated(),
+    sessionID: req.sessionID,
+    hasSession: !!req.session,
+    user: req.user ? { id: req.user._id, username: req.user.username } : null,
+    cookie: req.session?.cookie,
+  });
 });
 
 // ROTA DE FALLBACK PARA SERVIR O FRONTEND
