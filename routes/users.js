@@ -13,13 +13,26 @@ router
 // 2 - ROUTE "/login - POST  + PASSPORT" - AUTENTICAR USUARIO
 router
   .route("/login")
-  .post(
-    passport.authenticate("local", {
-      failureFlash: true,
-      failureRedirect: "/api/login", // O React vai lidar com o redirecionamento, mas o Passport precisa de um fallback
-    }),
-    users.login
-  );
+  .post((req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        // Autenticação falhou - retorna erro JSON
+        return res.status(401).json({
+          error: info?.message || "Username ou password inválidos.",
+        });
+      }
+      // Autenticação bem-sucedida - faz login
+      req.login(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        return users.login(req, res);
+      });
+    })(req, res, next);
+  });
 
 // 3 - ROUTE "/logout" - GET - SAIR
 router.get("/logout", users.logout);
@@ -32,5 +45,7 @@ router.get("/current-user", (req, res) => {
     res.status(401).json({ user: null });
   }
 });
+
+module.exports = router;
 
 module.exports = router;
