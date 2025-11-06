@@ -90,13 +90,17 @@ const allowedOrigins = [
   process.env.FRONTEND_URL, // Produção (Vercel)
 ].filter(Boolean); // Remove undefined se FRONTEND_URL não estiver definida
 
+console.log('🔐 CORS Allowed Origins:', allowedOrigins);
+
 app.use(
   cors({
     origin: function (origin, callback) {
+      console.log('🌐 Request from origin:', origin);
       // Permite requisições sem origin (como Postman) ou de origens permitidas
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log('❌ CORS blocked origin:', origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -218,6 +222,13 @@ app.use((req, res, next) => {
 
 // ROTAS DE API
 app.use('/api', apiLimiter); // Rate limit geral para todas as rotas de API
+// Middleware de log para debug
+app.use('/api', (req, res, next) => {
+  console.log(`📍 API Request: ${req.method} ${req.originalUrl}`);
+  console.log('🔑 Authenticated:', req.isAuthenticated ? req.isAuthenticated() : 'N/A');
+  console.log('👤 User:', req.user ? req.user.username : 'none');
+  next();
+});
 app.use('/api/login', authLimiter); // Rate limit específico para login
 app.use('/api/register', authLimiter); // Rate limit específico para registro
 app.use('/api', userRoutes);

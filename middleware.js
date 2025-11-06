@@ -6,11 +6,21 @@ const Review = require('./models/review');
 // MIDDLEWARE - AUTENTICACAO DO USUARIO
 module.exports.isLoggedIn = (req, res, next) => {
   // Passport
+  console.log('🔒 isLoggedIn check:', {
+    isAuthenticated: req.isAuthenticated(),
+    sessionID: req.sessionID,
+    hasSession: !!req.session,
+    user: req.user ? req.user.username : 'none',
+    cookies: req.headers.cookie ? 'present' : 'missing',
+  });
+  
   if (!req.isAuthenticated()) {
-    //
+    console.log('❌ Authentication failed - no user in session');
     // Retorna JSON em vez de redirecionar
     return res.status(401).json({ error: 'Você precisa estar logado!' });
   }
+  
+  console.log('✅ Authentication passed');
   next();
 };
 
