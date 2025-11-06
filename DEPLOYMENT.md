@@ -1,207 +1,176 @@
-# 📦 DEPLOYMENT.md - Guia de Deploy
+# 📦 DEPLOYMENT.md - Deployment Guide
 
-## 🎯 Visão Geral
+## 🎯 Overview
 
-Este projeto usa uma arquitetura separada:
+This project uses a decoupled architecture deploying frontend and backend separately:
 
-- **Frontend (React)**: Deploy no Vercel
-- **Backend (Express)**: Deploy no Render
+- **Frontend (React SPA)**: Vercel
+- **Backend (Express API)**: Render
 - **Database**: MongoDB Atlas
-- **Storage**: Cloudinary
+- **Image Storage/CDN**: Cloudinary
+
+Both services auto-deploy from the `main` branch on GitHub.
 
 ---
 
-## 🚀 Parte 1: Deploy do Backend (Render)
+## 🚀 Part 1: Backend Deployment (Render)
 
-### Passo 1: Preparar o Repositório
+### Step 1: Prepare Repository
 
-✅ Já feito - Código pronto para deploy
+✅ Already done — codebase ready for deployment.
 
-### Passo 2: Criar Conta no Render
+### Step 2: Create Render Account
+1. Go to https://render.com
+2. Sign up / log in and connect GitHub
 
-1. Acesse: https://render.com
-2. Clique em "Get Started for Free"
-3. Conecte sua conta do GitHub
-
-### Passo 3: Criar Web Service
-
-1. No dashboard do Render, clique em "New +"
-2. Selecione "Web Service"
-3. Conecte seu repositório `YelpCamp-React`
-4. Configure:
-   - **Name**: `yelpcamp-backend` (ou o nome que preferir)
-   - **Region**: US West (Oregon) ou mais próximo de você
+### Step 3: Create Web Service
+1. In Render dashboard click "New +" → "Web Service"
+2. Select repository `YelpCamp-React`
+3. Configuration:
+   - **Name**: `josepaulocamp-backend` (or similar)
+   - **Region**: Nearest available (e.g. US West)
    - **Branch**: `main`
-   - **Root Directory**: (deixe vazio - raiz do projeto)
+   - **Root Directory**: (leave blank)
    - **Runtime**: `Node`
    - **Build Command**: `npm install`
    - **Start Command**: `node app.js`
-   - **Plan**: Free
+   - **Plan**: Free (upgrade later if needed)
 
-### Passo 4: Configurar Variáveis de Ambiente
-
-No Render, na seção "Environment", adicione:
-
+### Step 4: Environment Variables
+Add under "Environment":
 ```
 NODE_ENV=production
-DB_URL=mongodb+srv://seu-usuario:senha@cluster.mongodb.net/yelpcamp?retryWrites=true&w=majority
-SECRET=seu-secret-super-seguro-aqui-minimum-32-caracteres
-CLOUDINARY_CLOUD_NAME=seu-cloudinary-cloud-name
-CLOUDINARY_KEY=sua-cloudinary-key
-CLOUDINARY_SECRET=seu-cloudinary-secret
-MAPBOX_TOKEN=seu-mapbox-token
-FRONTEND_URL=https://seu-app.vercel.app
+DB_URL=mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/yelpcamp?retryWrites=true&w=majority
+SECRET=<your-32+char-random-session-secret>
+CLOUDINARY_CLOUD_NAME=<cloudinary-cloud-name>
+CLOUDINARY_KEY=<cloudinary-api-key>
+CLOUDINARY_SECRET=<cloudinary-api-secret>
+MAPBOX_TOKEN=<mapbox-token>
+FRONTEND_URL=http://localhost:5173   # temporary until frontend deploy
 ```
 
-⚠️ **IMPORTANTE**:
+After frontend deploy, update `FRONTEND_URL` to the Vercel URL.
 
-- `FRONTEND_URL` será preenchido após deploy do frontend (Passo 2)
-- Por enquanto, deixe como: `FRONTEND_URL=http://localhost:5173`
-
-### Passo 5: Deploy
-
-1. Clique em "Create Web Service"
-2. Aguarde o build (~2-3 minutos)
-3. ✅ Anote a URL: `https://yelpcamp-backend-xxxx.onrender.com`
+### Step 5: Deploy
+1. Click "Create Web Service"
+2. Wait for build (~2–3 min)
+3. ✅ Note backend URL: `https://josepaulocamp-backend.onrender.com` (or similar)
 
 ---
 
-## 🎨 Parte 2: Deploy do Frontend (Vercel)
+## 🎨 Part 2: Frontend Deployment (Vercel)
 
-### Passo 1: Criar Conta no Vercel
+### Step 1: Create Vercel Account
+1. Go to https://vercel.com
+2. Sign up / log in and connect GitHub
 
-1. Acesse: https://vercel.com
-2. Clique em "Sign Up"
-3. Conecte sua conta do GitHub
-
-### Passo 2: Importar Projeto
-
-1. No dashboard, clique em "Add New... > Project"
-2. Selecione seu repositório `YelpCamp-React`
-3. Configure:
+### Step 2: Import Project
+1. Click "Add New…" → "Project"
+2. Select repository `YelpCamp-React`
+3. Settings:
    - **Framework Preset**: Vite
    - **Root Directory**: `client`
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
 
-### Passo 3: Configurar Variáveis de Ambiente
-
-Na seção "Environment Variables", adicione:
-
+### Step 3: Environment Variables (Frontend)
 ```
-VITE_API_URL=https://yelpcamp-backend-xxxx.onrender.com
-VITE_MAPBOX_TOKEN=seu-mapbox-token
+VITE_API_URL=https://josepaulocamp-backend.onrender.com/api
+VITE_MAPBOX_TOKEN=<mapbox-token>
 ```
 
-⚠️ Substitua `yelpcamp-backend-xxxx.onrender.com` pela URL do Render (Parte 1, Passo 5)
-
-### Passo 4: Deploy
-
-1. Clique em "Deploy"
-2. Aguarde o build (~1-2 minutos)
-3. ✅ Anote a URL: `https://seu-app.vercel.app`
+### Step 4: Deploy
+1. Click "Deploy"
+2. Wait (~1–2 min)
+3. ✅ Note frontend URL: `https://josepaulocamp.vercel.app`
 
 ---
 
-## 🔄 Parte 3: Conectar Frontend e Backend
+## 🔄 Part 3: Wire Frontend and Backend
 
-### Atualizar Backend com URL do Frontend
-
-1. Volte ao Render dashboard
-2. Acesse seu web service `yelpcamp-backend`
-3. Vá em "Environment"
-4. Atualize a variável:
-   ```
-   FRONTEND_URL=https://seu-app.vercel.app
-   ```
-5. Clique em "Save Changes"
-6. O Render fará redeploy automático
+Update backend CORS whitelist:
+1. In Render service settings → Environment
+2. Change `FRONTEND_URL`:
+```
+FRONTEND_URL=https://josepaulocamp.vercel.app
+```
+3. Save → triggers automatic redeploy.
 
 ---
 
-## ✅ Parte 4: Verificar Deploy
+## ✅ Part 4: Verification Checklist
 
-### Checklist:
+Visit and test:
+- Backend API: `GET /api/campgrounds` responds JSON
+- Frontend loads without console errors
+- Login & session cookie set (inspect Storage > Cookies)
+- Create campground (images upload to Cloudinary)
+- Map renders (Mapbox tiles load)
+- Reviews can be created and deleted
+- Pagination metadata present in list response
 
-- [ ] Backend responde em `https://yelpcamp-backend-xxxx.onrender.com/api/campgrounds`
-- [ ] Frontend carrega em `https://seu-app.vercel.app`
-- [ ] Login funciona
-- [ ] Pode criar campground
-- [ ] Imagens fazem upload (Cloudinary)
-- [ ] Mapa aparece (Mapbox)
-
-### Testar CORS:
-
-Abra o console do navegador (F12) no frontend e verifique se não há erros de CORS.
-
----
-
-## 🐛 Troubleshooting Comum
-
-### Backend não conecta ao MongoDB
-
-- Verifique se o IP do Render está na whitelist do MongoDB Atlas
-- No Atlas: Network Access > Add IP Address > Allow Access from Anywhere (0.0.0.0/0)
-
-### Frontend não conecta ao Backend
-
-- Verifique se `VITE_API_URL` no Vercel aponta para a URL correta do Render
-- Verifique se `FRONTEND_URL` no Render aponta para a URL correta do Vercel
-- Confira se cookies estão configurados com `sameSite: 'none'` e `secure: true`
-
-### Backend "dorme" (cold start)
-
-- É normal no plano free do Render
-- Primeiro acesso após 15min de inatividade demora ~30s
-- Solução: usar cron job para manter acordado (opcional)
-
-### Erro de Session/Cookie
-
-- Certifique-se que `withCredentials: true` está no Axios (http.js)
-- Verifique se cookie está com `secure: true` e `sameSite: 'none'` em produção
+### CORS Test
+Open DevTools Console on frontend — confirm no CORS or cookie warnings.
 
 ---
 
-## 🔄 Deploy Automático
+## 🐛 Common Troubleshooting
 
-### Configurado! ✅
+### Backend cannot connect to MongoDB
+- Ensure Atlas Network Access allows Render IPs (or use 0.0.0.0/0 for dev)
+- Verify `DB_URL` uses correct credentials and cluster name
 
-- Push para `main` → Vercel e Render redeployam automaticamente
-- Desenvolvimento local usa `.env.local` (não comitar!)
-- Produção usa variáveis do Vercel/Render
+### Frontend cannot reach backend
+- Check `VITE_API_URL` points to backend `/api`
+- Verify `FRONTEND_URL` on Render matches exact Vercel URL (no trailing slash)
+- Confirm cookies use `SameSite=None; Secure` in production
+
+### Slow first backend response
+- Render free tier spins down after ~15 min idle; first request may take ~30s
+- Subsequent requests are fast
+
+### Session/Cookie issues (401 after login)
+- Axios instance must use `withCredentials: true`
+- Ensure `trust proxy` is set (`app.set('trust proxy', 1)`) in production
+- Cookie must be `Secure` + `SameSite=None` for cross-domain
 
 ---
 
-## 📝 Variáveis de Ambiente - Resumo
+## 🔄 Automatic Deployment
 
-### Backend (Render):
+✅ Configured:
+- Push to `main` ⇒ Vercel & Render auto-redeploy
+- Local dev uses uncommitted `.env` + `client/.env.local`
+- Production uses platform environment variable UIs
 
+---
+
+## 📝 Environment Variable Summary
+
+### Backend (Render)
 ```
 NODE_ENV=production
-DB_URL=mongodb+srv://...
-SECRET=...
-CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_KEY=...
-CLOUDINARY_SECRET=...
-MAPBOX_TOKEN=...
-- Frontend:
+DB_URL=mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/yelpcamp
+SECRET=<session-secret>
+CLOUDINARY_CLOUD_NAME=<cloud-name>
+CLOUDINARY_KEY=<cloud-key>
+CLOUDINARY_SECRET=<cloud-secret>
+MAPBOX_TOKEN=<mapbox-token>
 FRONTEND_URL=https://josepaulocamp.vercel.app
 ```
 
-### Frontend (Vercel):
-
+### Frontend (Vercel)
 ```
-VITE_API_URL=https://josepaulocamp-backend.onrender.com
-VITE_MAPBOX_TOKEN=...
+VITE_API_URL=https://josepaulocamp-backend.onrender.com/api
+VITE_MAPBOX_TOKEN=<mapbox-token>
 ```
 
 ---
 
-## 🎉 Pronto!
+## 🎉 Done!
 
-Sua aplicação está no ar:
-
+Production URLs:
 - Frontend: https://josepaulocamp.vercel.app
-- Backend: https://josepaulocamp-backend.onrender.com/
+- Backend: https://josepaulocamp-backend.onrender.com
 
-Qualquer push no GitHub atualiza automaticamente! 🚀
+Any push to `main` redeploys automatically. 🚀
