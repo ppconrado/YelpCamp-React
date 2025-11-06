@@ -184,13 +184,14 @@ CLOUDINARY_CLOUD_NAME=...
 CLOUDINARY_KEY=...
 CLOUDINARY_SECRET=...
 MAPBOX_TOKEN=...
-FRONTEND_URL=https://seu-app.vercel.app
+- Frontend:
+FRONTEND_URL=https://josepaulocamp.vercel.app
 ```
 
 ### Frontend (Vercel):
 
 ```
-VITE_API_URL=https://yelpcamp-backend-xxxx.onrender.com
+VITE_API_URL=https://josepaulocamp-backend.onrender.com
 VITE_MAPBOX_TOKEN=...
 ```
 
@@ -200,7 +201,7 @@ VITE_MAPBOX_TOKEN=...
 
 Sua aplicação está no ar:
 
-- Frontend: https://seu-app.vercel.app
-- Backend: https://yelpcamp-backend-xxxx.onrender.com
+- Frontend: https://josepaulocamp.vercel.app
+- Backend: https://josepaulocamp-backend.onrender.com/
 
 Qualquer push no GitHub atualiza automaticamente! 🚀
