@@ -187,8 +187,7 @@ const CampgroundIndex = () => {
 
       {/* Mobile sticky pager */}
       <div
-        className="d-md-none position-sticky bottom-0 bg-light border-top py-2"
-        style={{ zIndex: 1020 }}
+        className="d-md-none mobile-pager-sticky"
       >
         <div className="container d-flex justify-content-between align-items-center">
           <button

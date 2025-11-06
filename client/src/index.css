@@ -49,6 +49,9 @@ body.camp-scroll main.container {
   padding-top: 1rem;
   height: calc(100vh - 56px - var(--footer-h)); /* navbar(56) + footer */
   overflow: hidden; /* evita scroll da página, só do conteúdo interno */
+  /* Melhorar comportamento em iOS */
+  position: relative;
+  touch-action: pan-y; /* permitir apenas scroll vertical */
 }
 
 body.camp-scroll .footer {
@@ -65,6 +68,19 @@ body.camp-scroll .footer {
   padding-bottom: calc(
     var(--footer-h) + 1rem
   ); /* espaço para não ficar atrás do footer */
+  /* Melhorias para scroll em iOS */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  /* Evitar problemas de scroll em mobile Safari */
+  position: relative;
+  will-change: scroll-position;
+}
+
+/* Mais espaço em mobile para facilitar scroll */
+@media (max-width: 767px) {
+  .camp-scroll-inner {
+    padding-bottom: calc(var(--footer-h) + 70px); /* espaço extra para pager móvel */
+  }
 }
 
 /* Estilo para a página inicial (Home.jsx) */
@@ -193,9 +209,28 @@ body.camp-scroll .footer {
   display: none;
 }
 
+/* Mobile pager: melhorias para iOS */
+.mobile-pager-sticky {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1020;
+  background-color: #f8f9fa;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  /* Evitar que interfira com scroll em iOS */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  touch-action: none; /* desabilitar gestos no pager */
+}
+
 /* Campgrounds index card polish */
 .camp-card {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  /* Melhorar performance de toque em mobile */
+  touch-action: manipulation;
 }
 
 .camp-card:hover {
