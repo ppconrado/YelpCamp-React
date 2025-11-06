@@ -72,8 +72,9 @@ const CampgroundIndex = () => {
       <div className="map-card mb-4">
         <MapboxMap
           geoJson={geoJson}
-          center={[-98.583333, 39.833333]}
-          zoom={3}
+          center={[-47.8825, -15.7942]} // Brasília
+          zoom={5}
+          fitToBounds={false}
           height={450}
         />
       </div>

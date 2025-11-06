@@ -10,6 +10,7 @@ const MapboxMap = ({
   zoom = 9,
   center = [-74.5, 40],
   height = 380,
+  fitToBounds = true,
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -60,11 +61,11 @@ const MapboxMap = ({
 
     const markers = [];
     try {
-      // Fit to bounds if multiple features
+      // Fit to bounds if multiple features and allowed
       const coords = geoJson.features
         .map((f) => f?.geometry?.coordinates)
         .filter(Boolean);
-      if (coords.length > 1) {
+      if (fitToBounds && coords.length > 1) {
         const bounds = coords.reduce(
           (b, c) => b.extend(c),
           new mapboxgl.LngLatBounds(coords[0], coords[0])
@@ -91,7 +92,7 @@ const MapboxMap = ({
     return () => {
       markers.forEach((m) => m.remove());
     };
-  }, [geoJson, isLoaded]);
+  }, [geoJson, isLoaded, fitToBounds]);
 
   if (!hasToken) {
     return (
