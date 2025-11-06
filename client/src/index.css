@@ -62,7 +62,9 @@ body.camp-scroll .footer {
 .camp-scroll-inner {
   height: 100%;
   overflow-y: auto;
-  padding-bottom: calc(var(--footer-h) + 1rem); /* espaço para não ficar atrás do footer */
+  padding-bottom: calc(
+    var(--footer-h) + 1rem
+  ); /* espaço para não ficar atrás do footer */
 }
 
 /* Estilo para a página inicial (Home.jsx) */

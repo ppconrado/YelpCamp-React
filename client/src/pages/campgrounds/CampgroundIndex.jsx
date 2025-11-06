@@ -50,7 +50,7 @@ const CampgroundIndex = () => {
     document.body.classList.add('camp-list-bg');
     // Enable inner scrolling with static footer/header on this page
     document.body.classList.add('camp-scroll');
-    
+
     return () => {
       document.body.classList.remove('camp-list-bg');
       document.body.classList.remove('camp-scroll');
