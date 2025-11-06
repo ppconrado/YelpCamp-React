@@ -4,13 +4,21 @@ Aplicação migrada do projeto EJS para SPA em React/Vite com backend Express/Mo
 
 ## Requisitos
 
-- Node.js 18+
-- MongoDB rodando localmente (ou string de conexão em DB_URL)
-- Conta Cloudinary (para upload de imagens)
-- Token Mapbox (para geocodificação e mapas)
 
-## Variáveis de Ambiente
+# JosePauloCamp 🏕️
 
+> A modern, full-stack campground review platform built with React, Express, and MongoDB.
+
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://josepaulocamp.vercel.app)
+[![GitHub](https://img.shields.io/badge/github-source-blue)](https://github.com/ppconrado/YelpCamp-React)
+
+[View Live Application](https://josepaulocamp.vercel.app) | [Technical Documentation](./ARCHITECTURE.md) | [Deployment Guide](./DEPLOYMENT.md)
+
+---
+
+## 📖 Overview
+
+JosePauloCamp is a full-featured campground review application where users can discover, share, and review campgrounds. Built as a modern Single Page Application (SPA) with React on the frontend and Express on the backend, it showcases best practices in full-stack development, security, and cloud deployment.
 Crie um arquivo `.env` na raiz (backend):
 
 ```
