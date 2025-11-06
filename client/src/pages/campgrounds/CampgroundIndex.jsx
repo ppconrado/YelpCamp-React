@@ -72,11 +72,10 @@ const CampgroundIndex = () => {
       <div className="map-card mb-4">
         <MapboxMap
           geoJson={geoJson}
-          center={[-47.8825, -15.7942]} // Brasília
+          center={[-98.583333, 39.833333]} // US center (previous default)
           zoom={3}
-          fitToBounds={false}
-          projection="globe"
-          spinOnLoad={true}
+          // Allow auto fit to markers to restore the original globe movement
+          fitToBounds={true}
           height={450}
         />
       </div>
