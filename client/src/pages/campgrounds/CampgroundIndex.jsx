@@ -87,110 +87,124 @@ const CampgroundIndex = () => {
 
   if (loading) {
     return (
-      <div className="camp-scroll-inner" ref={scrollContainerRef}>
-        <h1 className="mb-4">All Campgrounds</h1>
-        <div className="map-card mb-4">
-          <div
-            style={{
-              height: '450px',
-              backgroundColor: '#e0e0e0',
-              animation: 'skeleton-pulse 1.5s ease-in-out infinite',
-            }}
-          />
+      <>
+        <div className="camp-scroll-inner" ref={scrollContainerRef}>
+          <h1 className="mb-4">All Campgrounds</h1>
+          <div className="map-card mb-4">
+            <div
+              style={{
+                height: '450px',
+                backgroundColor: '#e0e0e0',
+                animation: 'skeleton-pulse 1.5s ease-in-out infinite',
+              }}
+            />
+          </div>
+          {[...Array(6)].map((_, index) => (
+            <CardSkeleton key={index} />
+          ))}
         </div>
-        {[...Array(6)].map((_, index) => (
-          <CardSkeleton key={index} />
-        ))}
-      </div>
+        {/* Mobile pager fixo - fora do scroll */}
+        <div className="d-md-none mobile-pager-fixed">
+          <div className="container d-flex justify-content-between align-items-center">
+            <button className="btn btn-outline-secondary btn-sm" disabled>
+              Anterior
+            </button>
+            <span className="small">...</span>
+            <button className="btn btn-outline-secondary btn-sm" disabled>
+              Próxima
+            </button>
+          </div>
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="camp-scroll-inner" ref={scrollContainerRef}>
-      <h1 className="mb-4">All Campgrounds</h1>
-      <div className="map-card mb-4">
-        <MapboxMap
-          geoJson={geoJson}
-          center={[-98.583333, 39.833333]} // US center (previous default)
-          zoom={3}
-          // Allow auto fit to markers to restore the original globe movement
-          fitToBounds={true}
-          // Evitar que o mapa capture o gesto de scroll em telas pequenas
-          disableInteractionOnMobile={true}
-          height={450}
-        />
-      </div>
-      {campgrounds.map((campground) => (
-        <div
-          className="card mb-3 camp-card position-relative"
-          key={campground._id}
-        >
-          <div className="row">
-            <div className="col-md-4">
-              {campground.images && campground.images.length > 0 && (
-                <img
-                  className="img-fluid camp-card-img"
-                  alt=""
-                  src={campground.images[0].url}
-                />
-              )}
-            </div>
-            <div className="col-md-8">
-              <div className="card-body">
-                <h5 className="card-title">{campground.title}</h5>
-                <p className="card-text">
-                  {campground.description.substring(0, 100)}...
-                </p>
-                <p className="card-text">
-                  <small className="text-muted">{campground.location}</small>
-                </p>
-                <Link
-                  to={`/campgrounds/${campground._id}?from=${pageFromUrl}`}
-                  className="stretched-link"
-                  aria-label={`Ver ${campground.title}`}
-                />
+    <>
+      <div className="camp-scroll-inner" ref={scrollContainerRef}>
+        <h1 className="mb-4">All Campgrounds</h1>
+        <div className="map-card mb-4">
+          <MapboxMap
+            geoJson={geoJson}
+            center={[-98.583333, 39.833333]} // US center (previous default)
+            zoom={3}
+            // Allow auto fit to markers to restore the original globe movement
+            fitToBounds={true}
+            // Evitar que o mapa capture o gesto de scroll em telas pequenas
+            disableInteractionOnMobile={true}
+            height={450}
+          />
+        </div>
+        {campgrounds.map((campground) => (
+          <div
+            className="card mb-3 camp-card position-relative"
+            key={campground._id}
+          >
+            <div className="row">
+              <div className="col-md-4">
+                {campground.images && campground.images.length > 0 && (
+                  <img
+                    className="img-fluid camp-card-img"
+                    alt=""
+                    src={campground.images[0].url}
+                  />
+                )}
+              </div>
+              <div className="col-md-8">
+                <div className="card-body">
+                  <h5 className="card-title">{campground.title}</h5>
+                  <p className="card-text">
+                    {campground.description.substring(0, 100)}...
+                  </p>
+                  <p className="card-text">
+                    <small className="text-muted">{campground.location}</small>
+                  </p>
+                  <Link
+                    to={`/campgrounds/${campground._id}?from=${pageFromUrl}`}
+                    className="stretched-link"
+                    aria-label={`Ver ${campground.title}`}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      {/* Pagination controls */}
-      <nav
-        className="d-flex justify-content-center mt-4"
-        aria-label="Campgrounds pages"
-      >
-        <ul className="pagination">
-          <li className={`page-item ${!meta.hasPrev ? 'disabled' : ''}`}>
-            <button
-              className="page-link"
-              onClick={() => goToPage(meta.page - 1)}
-              aria-label="Anterior"
-            >
-              &laquo;
-            </button>
-          </li>
-          <li className="page-item disabled">
-            <span className="page-link">
-              Página {meta.page} de {meta.totalPages}
-            </span>
-          </li>
-          <li className={`page-item ${!meta.hasNext ? 'disabled' : ''}`}>
-            <button
-              className="page-link"
-              onClick={() => goToPage(meta.page + 1)}
-              aria-label="Próxima"
-            >
-              &raquo;
-            </button>
-          </li>
-        </ul>
-      </nav>
+        {/* Pagination controls - desktop */}
+        <nav
+          className="d-flex justify-content-center mt-4"
+          aria-label="Campgrounds pages"
+        >
+          <ul className="pagination">
+            <li className={`page-item ${!meta.hasPrev ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => goToPage(meta.page - 1)}
+                aria-label="Anterior"
+              >
+                &laquo;
+              </button>
+            </li>
+            <li className="page-item disabled">
+              <span className="page-link">
+                Página {meta.page} de {meta.totalPages}
+              </span>
+            </li>
+            <li className={`page-item ${!meta.hasNext ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => goToPage(meta.page + 1)}
+                aria-label="Próxima"
+              >
+                &raquo;
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
 
-      {/* Mobile sticky pager */}
-      <div
-        className="d-md-none mobile-pager-sticky"
-      >
+      {/* Mobile pager fixo - fora do scroll, acima do footer */}
+      <div className="d-md-none mobile-pager-fixed">
         <div className="container d-flex justify-content-between align-items-center">
           <button
             className="btn btn-outline-secondary btn-sm"
@@ -211,7 +225,7 @@ const CampgroundIndex = () => {
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

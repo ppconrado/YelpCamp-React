@@ -77,10 +77,10 @@ body.camp-scroll .footer {
   will-change: scroll-position;
 }
 
-/* Mais espaço em mobile para facilitar scroll */
+/* Mais espaço em mobile para facilitar scroll e não ser coberto pelo pager fixo */
 @media (max-width: 767px) {
   .camp-scroll-inner {
-    padding-bottom: calc(var(--footer-h) + 70px); /* espaço extra para pager móvel */
+    padding-bottom: calc(var(--footer-h) + 60px); /* espaço para pager fixo (50px altura aprox) */
   }
 }
 
@@ -210,18 +210,19 @@ body.camp-scroll .footer {
   display: none;
 }
 
-/* Mobile pager: melhorias para iOS */
-.mobile-pager-sticky {
-  position: sticky;
-  bottom: 0;
+/* Mobile pager: fixo na parte inferior, acima do footer */
+.mobile-pager-fixed {
+  position: fixed;
+  bottom: var(--footer-h);
   left: 0;
   right: 0;
   z-index: 1020;
-  background-color: #f8f9fa;
+  background-color: rgba(248, 249, 250, 0.98);
+  backdrop-filter: blur(8px);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding: 0.5rem 0;
   padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   /* Evitar que interfira com scroll em iOS */
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
