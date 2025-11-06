@@ -30,13 +30,24 @@ module.exports.register = async (req, res, next) => {
     const registeredUser = await User.register(user, password); // salt/hash
     req.login(registeredUser, (err) => {
       if (err) return next(err);
-      // Em vez de redirecionar, retorna o usuário e a mensagem flash
-      res
-        .status(201)
-        .json({
+      
+      console.log('✅ Registration successful for user:', registeredUser.username);
+      console.log('📝 Session ID:', req.sessionID);
+      
+      // Força o salvamento da sessão
+      req.session.save((saveErr) => {
+        if (saveErr) {
+          console.error('❌ Error saving session:', saveErr);
+          return res.status(500).json({ error: 'Erro ao salvar sessão' });
+        }
+        console.log('💾 Session saved successfully');
+        
+        // Em vez de redirecionar, retorna o usuário e a mensagem flash
+        res.status(201).json({
           user: registeredUser,
           message: 'Bem Vindo ao Jose Paulo Camp!',
         });
+      });
     });
   } catch (e) {
     // Retorna 400 e a mensagem de erro
@@ -49,10 +60,23 @@ module.exports.register = async (req, res, next) => {
 // };
 // CONTROLLER - VIEW DE SUCESSO NA AUTORIZACAO DE ACESSO DO USUARIO
 module.exports.login = (req, res) => {
-  // Retorna o usuário logado e a mensagem flash
-  res.json({
-    user: req.user,
-    message: 'Bem vindo! Estamos felizes com seu retorno!',
+  console.log('✅ Login successful for user:', req.user.username);
+  console.log('📝 Session ID:', req.sessionID);
+  console.log('🍪 Session cookie config:', req.session.cookie);
+  
+  // Força o salvamento da sessão
+  req.session.save((err) => {
+    if (err) {
+      console.error('❌ Error saving session:', err);
+      return res.status(500).json({ error: 'Erro ao salvar sessão' });
+    }
+    console.log('💾 Session saved successfully');
+    
+    // Retorna o usuário logado e a mensagem flash
+    res.json({
+      user: req.user,
+      message: 'Bem vindo! Estamos felizes com seu retorno!',
+    });
   });
 };
 // CONTROLLER - VIEW DE SAIDA DO USUARIO DO APLICATIVO

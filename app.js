@@ -140,7 +140,7 @@ const sessionConfig = {
   name: 'session',
   secret,
   resave: false,
-  saveUninitialized: false, // Não criar sessão vazia até que algo seja armazenado
+  saveUninitialized: true, // Precisa ser true para criar sessão no login
   // cookie
   cookie: {
     httpOnly: true,
