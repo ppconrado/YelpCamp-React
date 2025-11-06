@@ -1,8 +1,16 @@
 import http from './http';
 const API_URL = '/campgrounds';
 
-export const getCampgrounds = async ({ page = 1, limit = 12, sort = '-_id' } = {}) => {
-  const params = new URLSearchParams({ page: String(page), limit: String(limit), sort });
+export const getCampgrounds = async ({
+  page = 1,
+  limit = 12,
+  sort = '-_id',
+} = {}) => {
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+    sort,
+  });
   const response = await http.get(`${API_URL}?${params.toString()}`);
   return response.data; // { items, page, limit, total, totalPages, hasNext, hasPrev }
 };

@@ -6,12 +6,22 @@ import { useFlash } from '../../context/FlashContext';
 
 const CampgroundIndex = () => {
   const [campgrounds, setCampgrounds] = useState([]);
-  const [meta, setMeta] = useState({ page: 1, limit: 12, total: 0, totalPages: 1, hasNext: false, hasPrev: false });
+  const [meta, setMeta] = useState({
+    page: 1,
+    limit: 12,
+    total: 0,
+    totalPages: 1,
+    hasNext: false,
+    hasPrev: false,
+  });
   const [loading, setLoading] = useState(true);
   const { showFlash } = useFlash();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const pageFromUrl = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const pageFromUrl = Math.max(
+    1,
+    parseInt(searchParams.get('page') || '1', 10)
+  );
   const limit = 12;
 
   useEffect(() => {
@@ -37,8 +47,11 @@ const CampgroundIndex = () => {
     // Set a subtle page background to match the white cards
     document.body.classList.remove('home-hero');
     document.body.classList.add('camp-list-bg');
+    // Enable inner scrolling with static footer/header on this page
+    document.body.classList.add('camp-scroll');
     return () => {
       document.body.classList.remove('camp-list-bg');
+      document.body.classList.remove('camp-scroll');
     };
   }, [showFlash, pageFromUrl]);
 
@@ -67,7 +80,7 @@ const CampgroundIndex = () => {
   };
 
   return (
-    <div>
+    <div className="camp-scroll-inner">
       <h1 className="mb-4">All Campgrounds</h1>
       <div className="map-card mb-4">
         <MapboxMap
@@ -115,26 +128,60 @@ const CampgroundIndex = () => {
       ))}
 
       {/* Pagination controls */}
-      <nav className="d-flex justify-content-center mt-4" aria-label="Campgrounds pages">
+      <nav
+        className="d-flex justify-content-center mt-4"
+        aria-label="Campgrounds pages"
+      >
         <ul className="pagination">
           <li className={`page-item ${!meta.hasPrev ? 'disabled' : ''}`}>
-            <button className="page-link" onClick={() => goToPage(meta.page - 1)} aria-label="Anterior">&laquo;</button>
+            <button
+              className="page-link"
+              onClick={() => goToPage(meta.page - 1)}
+              aria-label="Anterior"
+            >
+              &laquo;
+            </button>
           </li>
           <li className="page-item disabled">
-            <span className="page-link">Página {meta.page} de {meta.totalPages}</span>
+            <span className="page-link">
+              Página {meta.page} de {meta.totalPages}
+            </span>
           </li>
           <li className={`page-item ${!meta.hasNext ? 'disabled' : ''}`}>
-            <button className="page-link" onClick={() => goToPage(meta.page + 1)} aria-label="Próxima">&raquo;</button>
+            <button
+              className="page-link"
+              onClick={() => goToPage(meta.page + 1)}
+              aria-label="Próxima"
+            >
+              &raquo;
+            </button>
           </li>
         </ul>
       </nav>
 
       {/* Mobile sticky pager */}
-      <div className="d-md-none position-sticky bottom-0 bg-light border-top py-2" style={{ zIndex: 1020 }}>
+      <div
+        className="d-md-none position-sticky bottom-0 bg-light border-top py-2"
+        style={{ zIndex: 1020 }}
+      >
         <div className="container d-flex justify-content-between align-items-center">
-          <button className="btn btn-outline-secondary btn-sm" disabled={!meta.hasPrev} onClick={() => goToPage(meta.page - 1)}>Anterior</button>
-          <span className="small">{meta.page}/{meta.totalPages}</span>
-          <button className="btn btn-outline-secondary btn-sm" disabled={!meta.hasNext} onClick={() => goToPage(meta.page + 1)}>Próxima</button>
+          <button
+            className="btn btn-outline-secondary btn-sm"
+            disabled={!meta.hasPrev}
+            onClick={() => goToPage(meta.page - 1)}
+          >
+            Anterior
+          </button>
+          <span className="small">
+            {meta.page}/{meta.totalPages}
+          </span>
+          <button
+            className="btn btn-outline-secondary btn-sm"
+            disabled={!meta.hasNext}
+            onClick={() => goToPage(meta.page + 1)}
+          >
+            Próxima
+          </button>
         </div>
       </div>
     </div>

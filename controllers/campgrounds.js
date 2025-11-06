@@ -1,13 +1,15 @@
-const Campground = require("../models/campground");
-const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const Campground = require('../models/campground');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 let geocoder;
 if (mapBoxToken) {
   geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 } else {
-  console.warn("MAPBOX_TOKEN não configurado. A geocodificação não funcionará.");
+  console.warn(
+    'MAPBOX_TOKEN não configurado. A geocodificação não funcionará.'
+  );
 }
-const { cloudinary } = require("../cloudinary");
+const { cloudinary } = require('../cloudinary');
 
 ///////////////////// CONTROLLER - VIEW  DA LISTA DE ACAMPAMENTOS ///////////////////
 module.exports.index = async (req, res) => {
@@ -76,23 +78,27 @@ module.exports.createCampground = async (req, res, next) => {
   // SAIDAS MENSSAGENS RENDERIZACAO
   console.log(campground);
   // Em vez de redirecionar, retorna o acampamento criado e a mensagem flash
-  res.status(201).json({ campground, message: "Novo acampamento criado com sucesso!" });
+  res
+    .status(201)
+    .json({ campground, message: 'Novo acampamento criado com sucesso!' });
 };
 //////////////// CONTROLLER - MOSTRAR ACAMPAMENTO /////////////////////////
 module.exports.showCampground = async (req, res) => {
   // BUSCA NO DB O DOCUMENTO REFERENTE AO ID
   const campground = await Campground.findById(req.params.id)
     .populate({
-      path: "reviews",
+      path: 'reviews',
       populate: {
-        path: "author",
+        path: 'author',
       },
     })
-    .populate("author");
+    .populate('author');
   // SE NAO EXISTIR O ID NO DB
   if (!campground) {
     // Retorna 404 e a mensagem de erro
-    return res.status(404).json({ error: "Não foi possível encontrar este acampamento!" });
+    return res
+      .status(404)
+      .json({ error: 'Não foi possível encontrar este acampamento!' });
   }
   // Retorna o acampamento em JSON
   res.json(campground);
@@ -106,7 +112,9 @@ module.exports.renderEditForm = async (req, res) => {
   // SE NAO EXISTIR NO DB
   if (!campground) {
     // Retorna 404 e a mensagem de erro
-    return res.status(404).json({ error: "Não foi possível encontrar este acampamento!" });
+    return res
+      .status(404)
+      .json({ error: 'Não foi possível encontrar este acampamento!' });
   }
   // Retorna o acampamento em JSON para preencher o formulário de edição no React
   res.json(campground);
@@ -136,7 +144,10 @@ module.exports.updateCampground = async (req, res) => {
   }
   // OPERACAO BEM SUCEDIDA DA REQUISICAO
   // Retorna o acampamento atualizado e a mensagem flash
-  res.json({ campground, message: "O acampamento foi atualizado com sucesso!" });
+  res.json({
+    campground,
+    message: 'O acampamento foi atualizado com sucesso!',
+  });
 };
 ////////////////// CONTROLLER - REMOVER ACAMPAMENTO //////////////////////////
 module.exports.deleteCampground = async (req, res) => {
@@ -146,5 +157,5 @@ module.exports.deleteCampground = async (req, res) => {
   await Campground.findByIdAndDelete(id);
   // OPERACAO BEM SUCEDIDA DA REQUISICAO
   // Retorna sucesso e a mensagem flash
-  res.json({ message: "O acampamento foi removido com sucesso!" });
+  res.json({ message: 'O acampamento foi removido com sucesso!' });
 };
