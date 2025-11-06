@@ -51,16 +51,18 @@ const CampgroundIndex = () => {
     // Enable inner scrolling with static footer/header on this page
     document.body.classList.add('camp-scroll');
     
-    // Scroll to top when page changes
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
     return () => {
       document.body.classList.remove('camp-list-bg');
       document.body.classList.remove('camp-scroll');
     };
   }, [showFlash, pageFromUrl]);
+
+  // Scroll to top after content is loaded
+  useEffect(() => {
+    if (!loading && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [loading, pageFromUrl]);
 
   if (loading) {
     return <div>Loading...</div>;
