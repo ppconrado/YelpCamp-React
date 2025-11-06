@@ -11,6 +11,8 @@ const MapboxMap = ({
   center = [-74.5, 40],
   height = 380,
   fitToBounds = true,
+  projection = 'globe', // 'globe' for 3D earth, 'mercator' default
+  spinOnLoad = false, // rotate the globe once on load
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -37,6 +39,23 @@ const MapboxMap = ({
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
     map.current.on('load', () => {
+      try {
+        if (projection && typeof map.current.setProjection === 'function') {
+          map.current.setProjection(projection);
+        }
+        // Optional one-time spin for nice globe effect
+        if (spinOnLoad) {
+          const currentBearing = map.current.getBearing() || 0;
+          // Spin a full turn over ~3s
+          map.current.rotateTo(currentBearing + 360, {
+            duration: 3000,
+            easing: (t) => t,
+          });
+        }
+      } catch (e) {
+        // Projection might not be supported in older versions
+        console.warn('Mapbox projection/spin not applied:', e);
+      }
       setIsLoaded(true);
     });
 

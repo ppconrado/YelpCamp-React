@@ -75,6 +75,8 @@ const CampgroundIndex = () => {
           center={[-47.8825, -15.7942]} // Brasília
           zoom={5}
           fitToBounds={false}
+          projection="globe"
+          spinOnLoad={true}
           height={450}
         />
       </div>
