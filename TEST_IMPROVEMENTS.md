@@ -7,7 +7,7 @@ This guide describes how to manually verify each implemented backend improvement
 Status: ✅ Working
 Expected Behavior:
 - Server refuses to start if a required variable like `SECRET` is missing.
-- After adding it, console shows: `✅ Variáveis de ambiente validadas com sucesso` (legacy message) — indicates successful validation.
+- After adding it, console shows: `✅ Environment variables validated successfully`.
 
 How to Trigger:
 - Temporarily rename `.env` then start the server.
@@ -46,9 +46,8 @@ Hard to hit manually; script below approximates it.
 ```
 Expected After ~100 Requests:
 ```json
-{ "error": "Muitas requisições deste IP, tente novamente em 15 minutos." }
+{ "error": "Too many requests from this IP, please try again in 15 minutes." }
 ```
-(Portuguese message will be internationalized later.)
 
 ### 3B. Auth Limit (5 attempts / 15 min)
 ```powershell
@@ -94,11 +93,10 @@ Expected: success JSON with welcome message.
 Press Ctrl+C in the server terminal.
 Expected Output:
 ```
-🔄 Recebido sinal de encerramento. Encerrando gracefully...
-✅ Servidor HTTP encerrado
-✅ Conexão MongoDB encerrada
+🔄 Received shutdown signal. Shutting down gracefully...
+✅ HTTP server closed
+✅ MongoDB connection closed
 ```
-(Portuguese status lines will be translated in a future pass.)
 
 ---
 
