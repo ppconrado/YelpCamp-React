@@ -71,11 +71,16 @@ module.exports.login = (req, res) => {
       return res.status(500).json({ error: 'Erro ao salvar sessão' });
     }
     console.log('💾 Session saved successfully');
+    console.log('📤 Response headers will include Set-Cookie');
     
     // Retorna o usuário logado e a mensagem flash
     res.json({
       user: req.user,
       message: 'Bem vindo! Estamos felizes com seu retorno!',
+      debug: {
+        sessionID: req.sessionID,
+        cookieName: req.session.cookie.originalMaxAge ? 'yelpcamp.sid' : 'unknown',
+      }
     });
   });
 };

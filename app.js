@@ -137,7 +137,7 @@ store.on('error', function (e) {
 
 const sessionConfig = {
   store,
-  name: 'session',
+  name: 'yelpcamp.sid', // Nome mais específico para o cookie
   secret,
   resave: false,
   saveUninitialized: true, // Precisa ser true para criar sessão no login
@@ -148,6 +148,7 @@ const sessionConfig = {
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Cross-site em produção
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
+    path: '/', // Garantir que o cookie está disponível em todas as rotas
   },
 };
 // EXPRESS SESSION
@@ -225,8 +226,10 @@ app.use('/api', apiLimiter); // Rate limit geral para todas as rotas de API
 // Middleware de log para debug
 app.use('/api', (req, res, next) => {
   console.log(`📍 API Request: ${req.method} ${req.originalUrl}`);
+  console.log('🍪 Cookies received:', req.headers.cookie || 'NONE');
   console.log('🔑 Authenticated:', req.isAuthenticated ? req.isAuthenticated() : 'N/A');
   console.log('👤 User:', req.user ? req.user.username : 'none');
+  console.log('📝 SessionID:', req.sessionID || 'NONE');
   next();
 });
 app.use('/api/login', authLimiter); // Rate limit específico para login
