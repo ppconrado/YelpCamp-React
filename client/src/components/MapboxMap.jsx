@@ -13,6 +13,8 @@ const MapboxMap = ({
   fitToBounds = true,
   projection = 'globe', // 'globe' for 3D earth, 'mercator' default
   spinOnLoad = false, // rotate the globe (continuous gentle spin)
+  // Limit how far the map will zoom in when fitting to current page markers (keeps pages consistent)
+  fitMaxZoom = 3,
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -121,7 +123,7 @@ const MapboxMap = ({
           (b, c) => b.extend(c),
           new mapboxgl.LngLatBounds(coords[0], coords[0])
         );
-        map.current.fitBounds(bounds, { padding: 40 });
+        map.current.fitBounds(bounds, { padding: 40, maxZoom: fitMaxZoom });
       }
 
       geoJson.features.forEach((feature) => {
@@ -143,7 +145,7 @@ const MapboxMap = ({
     return () => {
       markers.forEach((m) => m.remove());
     };
-  }, [geoJson, isLoaded, fitToBounds]);
+  }, [geoJson, isLoaded, fitToBounds, fitMaxZoom]);
 
   if (!hasToken) {
     return (
