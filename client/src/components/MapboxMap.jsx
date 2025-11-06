@@ -12,7 +12,7 @@ const MapboxMap = ({
   height = 380,
   fitToBounds = true,
   projection = 'globe', // 'globe' for 3D earth, 'mercator' default
-  spinOnLoad = false, // rotate the globe once on load
+  spinOnLoad = false, // rotate the globe (continuous gentle spin)
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -43,14 +43,39 @@ const MapboxMap = ({
         if (projection && typeof map.current.setProjection === 'function') {
           map.current.setProjection(projection);
         }
-        // Optional one-time spin for nice globe effect
+        // Optional gentle continuous spin (pauses on interaction)
         if (spinOnLoad) {
-          const currentBearing = map.current.getBearing() || 0;
-          // Spin a full turn over ~3s
-          map.current.rotateTo(currentBearing + 360, {
-            duration: 3000,
-            easing: (t) => t,
+          let userInteracting = false;
+          const spinOnce = () => {
+            if (!map.current) return;
+            if (userInteracting) return;
+            const zoom = map.current.getZoom();
+            if (zoom > 5) return; // avoid spinning when zoomed in
+            const currentBearing = map.current.getBearing() || 0;
+            // rotate slowly: +120 degrees per minute (~0.002 deg/ms)
+            map.current.rotateTo(currentBearing + 0.2, { duration: 100 });
+          };
+
+          const resume = () => {
+            userInteracting = false;
+          };
+          const pause = () => {
+            userInteracting = true;
+          };
+
+          map.current.on('mousedown', pause);
+          map.current.on('dragstart', pause);
+          map.current.on('zoomstart', pause);
+          map.current.on('mouseup', resume);
+          map.current.on('dragend', resume);
+          map.current.on('zoomend', resume);
+          map.current.on('moveend', () => {
+            // schedule next small rotation
+            setTimeout(spinOnce, 100);
           });
+
+          // kick off
+          setTimeout(spinOnce, 500);
         }
       } catch (e) {
         // Projection might not be supported in older versions
