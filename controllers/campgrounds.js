@@ -11,8 +11,35 @@ const { cloudinary } = require("../cloudinary");
 
 ///////////////////// CONTROLLER - VIEW  DA LISTA DE ACAMPAMENTOS ///////////////////
 module.exports.index = async (req, res) => {
-  const campgrounds = await Campground.find({}).populate("popupText");
-  res.json(campgrounds);
+  // Pagination and sorting
+  const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+  const limitRaw = parseInt(req.query.limit, 10);
+  const limit = Math.min(50, Math.max(1, isNaN(limitRaw) ? 12 : limitRaw));
+  const sort = req.query.sort || '-_id'; // default newest first using ObjectId timestamp
+
+  const skip = (page - 1) * limit;
+
+  // Basic query (can be extended later for filters/search)
+  const query = {};
+
+  const [items, total] = await Promise.all([
+    Campground.find(query).sort(sort).skip(skip).limit(limit),
+    Campground.countDocuments(query),
+  ]);
+
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const hasNext = page < totalPages;
+  const hasPrev = page > 1;
+
+  res.json({
+    items,
+    page,
+    limit,
+    total,
+    totalPages,
+    hasNext,
+    hasPrev,
+  });
 };
 ///////////////////// CONTROLLER - VIEW DE CRIAR NOVO ACAMPAMENTO ////////////////////
 // Não é mais necessário, o formulário será renderizado pelo React
