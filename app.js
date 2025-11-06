@@ -14,6 +14,7 @@ const rateLimit = require('express-rate-limit');
 
 const path = require('path');
 const fs = require('fs');
+const { version, name } = require('./package.json');
 const mongoose = require('mongoose');
 // const ejsMate = require("ejs-mate"); // REMOVIDO: Não usaremos mais EJS
 const session = require('express-session');
@@ -222,6 +223,17 @@ app.use('/api/register', authLimiter); // Rate limit específico para registro
 app.use('/api', userRoutes);
 app.use('/api/campgrounds', campgroundRoutes);
 app.use('/api/campgrounds/:id/reviews', reviewRoutes);
+
+// Healthcheck & Version endpoints (úteis para Render, monitoramento e debugging)
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime(), timestamp: Date.now() });
+});
+app.head('/health', (req, res) => {
+  res.status(200).end();
+});
+app.get('/version', (req, res) => {
+  res.json({ name, version, node: process.version, env: process.env.NODE_ENV });
+});
 
 // ROTA DE FALLBACK PARA SERVIR O FRONTEND
 // Em produção local/monorepo servimos o build do React (client/dist) SE existir.
