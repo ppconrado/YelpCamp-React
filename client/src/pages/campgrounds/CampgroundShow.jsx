@@ -59,6 +59,14 @@ const CampgroundShow = () => {
       }
     };
     fetchCampground();
+    // SPA feel: background + inner scroll with static header/footer
+    document.body.classList.remove('home-hero');
+    document.body.classList.add('camp-list-bg');
+    document.body.classList.add('camp-scroll');
+    return () => {
+      document.body.classList.remove('camp-list-bg');
+      document.body.classList.remove('camp-scroll');
+    };
   }, [id, showFlash, navigate]);
 
   const handleDelete = async () => {
@@ -105,7 +113,7 @@ const CampgroundShow = () => {
   };
 
   return (
-    <>
+    <div className="camp-scroll-inner">
       {/* Top section: Images/details (left) and Map (right) */}
       <div className="row">
         <div className="col-md-8">
@@ -245,7 +253,7 @@ const CampgroundShow = () => {
         confirmText="Delete"
         confirmVariant="danger"
       />
-    </>
+    </div>
   );
 };
 
