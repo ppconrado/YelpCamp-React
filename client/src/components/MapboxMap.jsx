@@ -43,8 +43,15 @@ const MapboxMap = ({
         if (projection && typeof map.current.setProjection === 'function') {
           map.current.setProjection(projection);
         }
-        // Optional gentle continuous spin (pauses on interaction)
+        // Optional initial full spin for visibility
         if (spinOnLoad) {
+          const startBearing = map.current.getBearing() || 0;
+          map.current.rotateTo(startBearing + 360, {
+            duration: 3000,
+            easing: (t) => t,
+          });
+
+          // Gentle continuous spin (pauses on interaction)
           let userInteracting = false;
           const spinOnce = () => {
             if (!map.current) return;
@@ -74,8 +81,8 @@ const MapboxMap = ({
             setTimeout(spinOnce, 100);
           });
 
-          // kick off
-          setTimeout(spinOnce, 500);
+          // kick off continuous after initial spin starts
+          setTimeout(spinOnce, 800);
         }
       } catch (e) {
         // Projection might not be supported in older versions

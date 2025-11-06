@@ -73,7 +73,7 @@ const CampgroundIndex = () => {
         <MapboxMap
           geoJson={geoJson}
           center={[-47.8825, -15.7942]} // Brasília
-          zoom={5}
+          zoom={3}
           fitToBounds={false}
           projection="globe"
           spinOnLoad={true}
