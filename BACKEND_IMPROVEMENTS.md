@@ -64,10 +64,35 @@
 
 ### 8. **Configuração de Produção**
 
-- CORS configurado para Vite dev server
+- CORS com whitelist dinâmica (localhost:5173 e FRONTEND_URL)
 - Helmet com CSP ajustado para Mapbox e Cloudinary
-- Express serve build do React (`client/dist`) em produção
+- Credenciais habilitadas no CORS com `exposedHeaders: ["Set-Cookie"]`
+- Cookies de sessão com `SameSite=None` e `Secure` em produção
+- `trust proxy` habilitado e `proxy: true` na sessão quando atrás de proxy (Render)
+- Express só serve o build do React (`client/dist`) se ele existir (monorepo local)
 - Logs apropriados para cada ambiente
+
+### 9. **Endpoints de Saúde e Versão**
+
+- `GET/HEAD /health` para healthcheck e uptime
+- `GET /version` retorna nome, versão, Node e ambiente (útil para monitoramento)
+
+### 10. **SPA Fallback Protegido**
+
+- Fallback do frontend só atende rotas que NÃO começam com `/api`
+- Evita retornar HTML para rotas de API (corrige erros como "Unexpected token '<' ... not valid JSON")
+
+### 11. **Sessões e Cookies Cross‑Domain**
+
+- Cookie de sessão nomeado (`yelpcamp.sid`), `httpOnly`, `SameSite=None` e `Secure` em produção
+- `app.set('trust proxy', 1)` em produção para cookies `Secure` atrás de proxy
+- `session` com `proxy: true` em produção
+- CORS com `credentials: true` e `exposedHeaders: ["Set-Cookie"]` para permitir cookies entre domínios
+
+### 12. **Paginação de Campgrounds**
+
+- Endpoint de listagem suporta `page`, `limit` (cap em 50) e `sort`
+- Resposta inclui `total`, `totalPages`, `hasNext`, `hasPrev` para UX mais fluida
 
 ---
 
@@ -81,13 +106,7 @@ npm run dev:full
 
 ### Produção
 
-```bash
-# 1. Build do frontend
-npm run build:client
-
-# 2. Subir em produção
-NODE_ENV=production npm start
-```
+Para passos de deploy e ambiente (Render + Vercel), consulte `DEPLOYMENT.md`.
 
 ### Seeds
 
@@ -104,6 +123,7 @@ Crie `.env` na raiz:
 ```
 DB_URL=mongodb://localhost:27017/yelp-camp
 SECRET=sua_chave_secreta_forte_aqui
+FRONTEND_URL=https://seu-frontend.vercel.app  # obrigatório em produção para CORS
 ```
 
 ### Opcionais (mas recomendadas):
@@ -146,14 +166,15 @@ PORT=3000
 
 ## 🔧 Próximas Melhorias (Opcional)
 
-1. **Paginação**: Adicionar skip/limit nas listagens de campgrounds
-2. **Cache**: Redis para queries frequentes
-3. **Busca avançada**: Filtros por preço, localização, rating
-4. **Upload otimizado**: Compression e resize de imagens no cliente
-5. **Notificações**: WebSockets para notificações em tempo real
-6. **Analytics**: Tracking de uso com Google Analytics ou similar
-7. **Tests**: Testes unitários (Jest) e E2E (Cypress)
-8. **CI/CD**: GitHub Actions para deploy automático
+1. **Cache**: Redis para queries frequentes
+2. **Busca avançada**: Filtros por preço, localização, rating
+3. **Upload otimizado**: Compression e resize de imagens no cliente
+4. **Notificações**: WebSockets para notificações em tempo real
+5. **Analytics**: Tracking de uso com Google Analytics ou similar
+6. **Tests**: Testes unitários (Jest) e E2E (Cypress)
+7. **CI/CD**: GitHub Actions para deploy automático
+8. **Higiene de produção**: remover `/api/debug/session` do build final
+9. **Upgrades**: migrar para Mongoose/Helmet/Connect-mongo mais recentes quando viável
 
 ---
 
@@ -164,3 +185,5 @@ PORT=3000
 - Flash messages disponíveis via `req.flash()` para compatibilidade
 - GeoJSON 2dsphere index permite queries como `$near` e `$geoWithin`
 - Text index suporta queries como `{ $text: { $search: "beach camping" } }`
+- `Set-Cookie` é exposto via CORS e cookies usam `SameSite=None` + `Secure` em produção
+- Fallback do SPA não intercepta `/api/*` (regex negativa) para evitar HTML em chamadas de API
