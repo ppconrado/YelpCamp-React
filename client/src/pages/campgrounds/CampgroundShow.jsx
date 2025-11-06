@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  useParams,
+  Link,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import { getCampground, deleteCampground } from '../../api/campgrounds';
 import { deleteReview } from '../../api/reviews';
 import MapboxMap from '../../components/MapboxMap';

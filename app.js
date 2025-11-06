@@ -83,9 +83,21 @@ const authLimiter = rateLimit({
 });
 
 // CONFIGURAÇÃO DO REACT E CORS
+const allowedOrigins = [
+  'http://localhost:5173', // Dev local
+  process.env.FRONTEND_URL, // Produção (Vercel)
+].filter(Boolean); // Remove undefined se FRONTEND_URL não estiver definida
+
 app.use(
   cors({
-    origin: 'http://localhost:5173', // Permite o acesso do servidor de desenvolvimento do Vite
+    origin: function (origin, callback) {
+      // Permite requisições sem origin (como Postman) ou de origens permitidas
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true, // Permite o envio de cookies (sessão)
   })
 );
@@ -126,7 +138,8 @@ const sessionConfig = {
   // cookie
   cookie: {
     httpOnly: true,
-    // secure: true, - secure connections https
+    secure: process.env.NODE_ENV === 'production', // HTTPS em produção
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Cross-site em produção
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },

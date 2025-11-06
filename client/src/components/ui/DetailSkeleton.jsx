@@ -6,7 +6,10 @@ const DetailSkeleton = () => {
       <div className="row">
         {/* Left column: Image and details */}
         <div className="col-md-8">
-          <div className="card mb-4 shadow-sm" style={{ backgroundColor: '#fff' }}>
+          <div
+            className="card mb-4 shadow-sm"
+            style={{ backgroundColor: '#fff' }}
+          >
             {/* Image skeleton */}
             <div
               style={{
@@ -63,7 +66,10 @@ const DetailSkeleton = () => {
             </div>
             {/* List group items skeleton */}
             <ul className="list-group list-group-flush">
-              <li className="list-group-item" style={{ backgroundColor: '#f8f9fa' }}>
+              <li
+                className="list-group-item"
+                style={{ backgroundColor: '#f8f9fa' }}
+              >
                 <div
                   style={{
                     height: '16px',
@@ -74,7 +80,10 @@ const DetailSkeleton = () => {
                   }}
                 />
               </li>
-              <li className="list-group-item" style={{ backgroundColor: '#fff' }}>
+              <li
+                className="list-group-item"
+                style={{ backgroundColor: '#fff' }}
+              >
                 <div
                   style={{
                     height: '16px',
@@ -85,7 +94,10 @@ const DetailSkeleton = () => {
                   }}
                 />
               </li>
-              <li className="list-group-item" style={{ backgroundColor: '#fff' }}>
+              <li
+                className="list-group-item"
+                style={{ backgroundColor: '#fff' }}
+              >
                 <div
                   style={{
                     height: '16px',
@@ -130,7 +142,10 @@ const DetailSkeleton = () => {
             }}
           />
           {/* Review card skeleton */}
-          <div className="card mb-4 shadow-sm" style={{ backgroundColor: '#fff' }}>
+          <div
+            className="card mb-4 shadow-sm"
+            style={{ backgroundColor: '#fff' }}
+          >
             <div className="card-body">
               <div
                 style={{
