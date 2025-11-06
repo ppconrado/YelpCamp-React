@@ -59,6 +59,11 @@ db.once('open', () => {
 // EXPRESS
 const app = express();
 
+// Trust proxy - necessary for secure cookies behind Render proxy
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // REQUEST LOGGING
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined')); // Formato detalhado para produção
@@ -90,21 +95,20 @@ const allowedOrigins = [
   process.env.FRONTEND_URL, // Produção (Vercel)
 ].filter(Boolean); // Remove undefined se FRONTEND_URL não estiver definida
 
-console.log('🔐 CORS Allowed Origins:', allowedOrigins);
-
 app.use(
   cors({
     origin: function (origin, callback) {
-      console.log('🌐 Request from origin:', origin);
       // Permite requisições sem origin (como Postman) ou de origens permitidas
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.log('❌ CORS blocked origin:', origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true, // Permite o envio de cookies (sessão)
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Set-Cookie'],
   })
 );
 // Aceita JSON do frontend (login/registro e APIs REST)
@@ -141,6 +145,7 @@ const sessionConfig = {
   secret,
   resave: false,
   saveUninitialized: true, // Precisa ser true para criar sessão no login
+  proxy: process.env.NODE_ENV === 'production', // Trust proxy in production (Render)
   // cookie
   cookie: {
     httpOnly: true,
@@ -223,15 +228,6 @@ app.use((req, res, next) => {
 
 // ROTAS DE API
 app.use('/api', apiLimiter); // Rate limit geral para todas as rotas de API
-// Middleware de log para debug
-app.use('/api', (req, res, next) => {
-  console.log(`📍 API Request: ${req.method} ${req.originalUrl}`);
-  console.log('🍪 Cookies received:', req.headers.cookie || 'NONE');
-  console.log('🔑 Authenticated:', req.isAuthenticated ? req.isAuthenticated() : 'N/A');
-  console.log('👤 User:', req.user ? req.user.username : 'none');
-  console.log('📝 SessionID:', req.sessionID || 'NONE');
-  next();
-});
 app.use('/api/login', authLimiter); // Rate limit específico para login
 app.use('/api/register', authLimiter); // Rate limit específico para registro
 app.use('/api', userRoutes);
