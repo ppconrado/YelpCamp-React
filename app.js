@@ -255,7 +255,8 @@ const hasClientBuild = fs.existsSync(clientIndexPath);
 
 if (process.env.NODE_ENV === 'production' && hasClientBuild) {
   app.use(express.static(clientBuildPath));
-  app.get('*', (req, res) => {
+  // Só serve o frontend para rotas que NÃO começam com /api
+  app.get(/^(?!\/api).+/, (req, res) => {
     res.sendFile(clientIndexPath);
   });
 } else {
@@ -263,10 +264,17 @@ if (process.env.NODE_ENV === 'production' && hasClientBuild) {
   app.get('/', (req, res) => {
     res.json({ status: 'ok', message: 'YelpCamp API running' });
   });
-  app.get('*', (req, res) => {
-    res.status(404).json({ error: 'Not Found', hint: 'Use /api endpoints' });
-  });
 }
+
+// Rota 404 para APIs não encontradas (só captura /api/*)
+app.use('/api/*', (req, res) => {
+  res.status(404).json({ error: 'API endpoint not found' });
+});
+
+// Rota 404 geral (para outras rotas não-API)
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Not Found', hint: 'Use /api endpoints' });
+});
 
 // TRATAMENTO DE ERROS CENTRALIZADO
 app.use((err, req, res, next) => {
