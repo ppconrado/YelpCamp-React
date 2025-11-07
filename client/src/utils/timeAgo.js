@@ -29,3 +29,17 @@ export const timeAgo = (timestamp, nowInput) => {
     return `${diffMonths} ${diffMonths === 1 ? 'month' : 'months'} ago`;
   return `${diffYears} ${diffYears === 1 ? 'year' : 'years'} ago`;
 };
+
+// Derive a creation timestamp from a Mongo ObjectId if createdAt is missing.
+// Returns ISO string.
+export const deriveTimestampFromId = (id, createdAt) => {
+  if (createdAt) return createdAt;
+  if (!id || typeof id !== 'string' || id.length < 8) return null;
+  try {
+    // First 8 hex chars = seconds since epoch
+    const seconds = parseInt(id.substring(0, 8), 16);
+    return new Date(seconds * 1000).toISOString();
+  } catch {
+    return null;
+  }
+};

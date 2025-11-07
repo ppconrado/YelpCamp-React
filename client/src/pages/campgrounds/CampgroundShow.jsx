@@ -14,7 +14,7 @@ import ConfirmModal from '../../components/ui/ConfirmModal';
 import DetailSkeleton from '../../components/ui/DetailSkeleton';
 import { useFlash } from '../../context/FlashContext';
 import { useAuth } from '../../context/AuthContext';
-import { timeAgo } from '../../utils/timeAgo';
+import { timeAgo, deriveTimestampFromId } from '../../utils/timeAgo';
 
 const CampgroundShow = () => {
   const [campground, setCampground] = useState(null);
@@ -204,13 +204,14 @@ const CampgroundShow = () => {
               className="card-footer text-muted"
               style={{ backgroundColor: '#f8f9fa' }}
             >
-              {campground.createdAt ? (
-                <span title={new Date(campground.createdAt).toLocaleString()}>
-                  {timeAgo(campground.createdAt, now)}
-                </span>
-              ) : (
-                <span />
-              )}
+              {(() => {
+                const ts = deriveTimestampFromId(campground._id, campground.createdAt);
+                return ts ? (
+                  <span title={new Date(ts).toLocaleString()}>{timeAgo(ts, now)}</span>
+                ) : (
+                  <span />
+                );
+              })()}
             </div>
           </div>
         </div>
@@ -241,14 +242,17 @@ const CampgroundShow = () => {
               <div className="card-body">
                 <h6 className="card-subtitle mb-2 text-muted">
                   By {review.author.username}{' '}
-                  {review.createdAt && (
-                    <small
-                      className="text-muted"
-                      title={new Date(review.createdAt).toLocaleString()}
-                    >
-                      · {timeAgo(review.createdAt, now)}
-                    </small>
-                  )}
+                  {(() => {
+                    const ts = deriveTimestampFromId(review._id, review.createdAt);
+                    return ts ? (
+                      <small
+                        className="text-muted"
+                        title={new Date(ts).toLocaleString()}
+                      >
+                        · {timeAgo(ts, now)}
+                      </small>
+                    ) : null;
+                  })()}
                 </h6>
                 <p className="card-text">Rating: {review.rating}</p>
                 <p className="card-text text-secondary">{review.body}</p>
