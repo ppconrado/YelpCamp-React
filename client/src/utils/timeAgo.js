@@ -3,10 +3,10 @@
  * @param {string | Date} timestamp - ISO timestamp or Date object
  * @returns {string} Human-readable relative time
  */
-export const timeAgo = (timestamp) => {
+export const timeAgo = (timestamp, nowInput) => {
   if (!timestamp) return '';
 
-  const now = new Date();
+  const now = nowInput ? new Date(nowInput) : new Date();
   const past = new Date(timestamp);
   const diffMs = now - past;
   const diffSecs = Math.floor(diffMs / 1000);

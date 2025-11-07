@@ -21,6 +21,7 @@ const CampgroundShow = () => {
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState(null);
+  const [now, setNow] = useState(Date.now());
   const { id } = useParams();
   const { showFlash } = useFlash();
   const { currentUser } = useAuth();
@@ -77,6 +78,12 @@ const CampgroundShow = () => {
       document.body.classList.remove('camp-scroll');
     };
   }, [id, showFlash, navigate]);
+
+  // Live-update relative timestamps every 60s
+  useEffect(() => {
+    const intervalId = setInterval(() => setNow(Date.now()), 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleDelete = async () => {
     setShowDeleteModal(true);
@@ -229,7 +236,12 @@ const CampgroundShow = () => {
                 <h6 className="card-subtitle mb-2 text-muted">
                   By {review.author.username}{' '}
                   {review.createdAt && (
-                    <small className="text-muted">· {timeAgo(review.createdAt)}</small>
+                    <small
+                      className="text-muted"
+                      title={new Date(review.createdAt).toLocaleString()}
+                    >
+                      · {timeAgo(review.createdAt, now)}
+                    </small>
                   )}
                 </h6>
                 <p className="card-text">Rating: {review.rating}</p>
