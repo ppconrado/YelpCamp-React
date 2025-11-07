@@ -204,7 +204,13 @@ const CampgroundShow = () => {
               className="card-footer text-muted"
               style={{ backgroundColor: '#f8f9fa' }}
             >
-              2 days ago
+              {campground.createdAt ? (
+                <span title={new Date(campground.createdAt).toLocaleString()}>
+                  {timeAgo(campground.createdAt, now)}
+                </span>
+              ) : (
+                <span />
+              )}
             </div>
           </div>
         </div>

@@ -45,7 +45,7 @@ const CampgroundSchema = new Schema(
       },
     ],
   },
-  opts
+  { ...opts, timestamps: true }
 );
 // POPUP CLUSTER MAP MODEL SCHEMA - mongoose
 CampgroundSchema.virtual('properties.popUpMarkup').get(function () {
