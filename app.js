@@ -33,6 +33,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
+const adminRoutes = require('./routes/admin');
 
 // CONEXAO PARA SALVAR UMA EXPRESS SESSION NO MongoDB (MERN)
 const MongoDBStore = require('connect-mongo')(session);
@@ -233,6 +234,7 @@ app.use('/api/register', authLimiter); // Rate limit específico para registro
 app.use('/api', userRoutes);
 app.use('/api/campgrounds', campgroundRoutes);
 app.use('/api/campgrounds/:id/reviews', reviewRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Healthcheck & Version endpoints (úteis para Render, monitoramento e debugging)
 app.get('/health', (req, res) => {
