@@ -20,10 +20,6 @@ module.exports.createReview = async (req, res) => {
     path: 'author',
     select: 'username',
   });
-  console.log(
-    'Review with timestamps:',
-    JSON.stringify(populatedReview, null, 2)
-  );
   res
     .status(201)
     .json({
