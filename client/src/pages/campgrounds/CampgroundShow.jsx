@@ -14,6 +14,7 @@ import ConfirmModal from '../../components/ui/ConfirmModal';
 import DetailSkeleton from '../../components/ui/DetailSkeleton';
 import { useFlash } from '../../context/FlashContext';
 import { useAuth } from '../../context/AuthContext';
+import { timeAgo } from '../../utils/timeAgo';
 
 const CampgroundShow = () => {
   const [campground, setCampground] = useState(null);
@@ -226,7 +227,10 @@ const CampgroundShow = () => {
             >
               <div className="card-body">
                 <h6 className="card-subtitle mb-2 text-muted">
-                  By {review.author.username}
+                  By {review.author.username}{' '}
+                  {review.createdAt && (
+                    <small className="text-muted">· {timeAgo(review.createdAt)}</small>
+                  )}
                 </h6>
                 <p className="card-text">Rating: {review.rating}</p>
                 <p className="card-text text-secondary">{review.body}</p>
