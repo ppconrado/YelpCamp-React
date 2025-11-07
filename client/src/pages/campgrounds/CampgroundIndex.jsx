@@ -4,6 +4,7 @@ import { getCampgrounds } from '../../api/campgrounds';
 import MapboxMap from '../../components/MapboxMap';
 import CardSkeleton from '../../components/ui/CardSkeleton';
 import { useFlash } from '../../context/FlashContext';
+import { timeAgo, deriveTimestampFromId } from '../../utils/timeAgo';
 
 const CampgroundIndex = () => {
   const [campgrounds, setCampgrounds] = useState([]);
@@ -19,6 +20,7 @@ const CampgroundIndex = () => {
   const { showFlash } = useFlash();
   const [searchParams, setSearchParams] = useSearchParams();
   const scrollContainerRef = useRef(null);
+  const [now, setNow] = useState(Date.now());
 
   const pageFromUrl = Math.max(
     1,
@@ -57,6 +59,12 @@ const CampgroundIndex = () => {
       document.body.classList.remove('camp-scroll');
     };
   }, [showFlash, pageFromUrl]);
+
+  // Live update timestamps every minute
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60000);
+    return () => clearInterval(id);
+  }, []);
 
   // Scroll to top after content is loaded
   useEffect(() => {
@@ -158,6 +166,19 @@ const CampgroundIndex = () => {
                   </p>
                   <p className="card-text">
                     <small className="text-muted">{campground.location}</small>
+                  </p>
+                  <p className="card-text">
+                    {(() => {
+                      const ts = deriveTimestampFromId(campground._id, campground.createdAt);
+                      return ts ? (
+                        <small
+                          className="text-muted"
+                          title={new Date(ts).toLocaleString()}
+                        >
+                          {timeAgo(ts, now)}
+                        </small>
+                      ) : null;
+                    })()}
                   </p>
                   <Link
                     to={`/campgrounds/${campground._id}?from=${pageFromUrl}`}
