@@ -61,7 +61,8 @@ async function backfillModel(Model, label) {
 }
 
 async function main() {
-  console.log('Connecting to MongoDB:', dbUrl);
+  const safeUrl = dbUrl ? (dbUrl.startsWith('mongodb+srv://') ? 'mongodb+srv://<hidden>@<cluster>/<db>' : 'mongodb://<hidden>@<host>/<db>') : 'N/A';
+  console.log('Connecting to MongoDB:', safeUrl);
   await mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
