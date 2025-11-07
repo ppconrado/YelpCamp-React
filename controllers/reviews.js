@@ -15,7 +15,14 @@ module.exports.createReview = async (req, res) => {
   await review.save();
   campground.reviews.push(review);
   await campground.save();
-  res.status(201).json({ review, message: 'Review adicionada com sucesso!' });
+  // Populate author so the client can render username without a full page refresh
+  const populatedReview = await Review.findById(review._id).populate({
+    path: 'author',
+    select: 'username',
+  });
+  res
+    .status(201)
+    .json({ review: populatedReview, message: 'Review adicionada com sucesso!' });
 };
 
 // Remover uma review
