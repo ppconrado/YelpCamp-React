@@ -48,7 +48,9 @@ body.camp-scroll main.container {
   margin-top: 0 !important;
   padding-top: 1rem;
   height: calc(100vh - 56px - var(--footer-h)); /* fallback */
-  height: calc(100dvh - 56px - var(--footer-h)); /* usar dvh em navegadores modernos/mobile */
+  height: calc(
+    100dvh - 56px - var(--footer-h)
+  ); /* usar dvh em navegadores modernos/mobile */
   overflow: hidden; /* evita scroll da página, só do conteúdo interno */
   /* Melhorar comportamento em iOS */
   position: relative;
@@ -80,7 +82,9 @@ body.camp-scroll .footer {
 /* Mais espaço em mobile para facilitar scroll e não ser coberto pelo pager fixo */
 @media (max-width: 767px) {
   .camp-scroll-inner {
-    padding-bottom: calc(var(--footer-h) + 60px); /* espaço para pager fixo (50px altura aprox) */
+    padding-bottom: calc(
+      var(--footer-h) + 60px
+    ); /* espaço para pager fixo (50px altura aprox) */
   }
 }
 
@@ -290,14 +294,18 @@ body.home-hero .cover-container {
 /* Ensure CTA never sits under the floating footer on small screens */
 @media (max-width: 576px) {
   .home-hero-content {
-    padding-bottom: calc(90px + env(safe-area-inset-bottom)); /* space for fixed footer chip + breathing room */
+    padding-bottom: calc(
+      90px + env(safe-area-inset-bottom)
+    ); /* space for fixed footer chip + breathing room */
   }
   .home-cta-btn {
     display: inline-block;
     margin-bottom: 0.5rem;
   }
   .home-hero-footer {
-    bottom: calc(0.5rem + env(safe-area-inset-bottom)); /* slightly lower to free CTA area */
+    bottom: calc(
+      0.5rem + env(safe-area-inset-bottom)
+    ); /* slightly lower to free CTA area */
   }
 }
 

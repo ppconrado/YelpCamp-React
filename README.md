@@ -14,6 +14,7 @@
 JosePauloCamp is a full-featured campground review application where users can discover, share, and review campgrounds. Built as a modern Single Page Application (SPA) with React on the frontend and Express on the backend, it showcases best practices in full-stack development, security, and cloud deployment.
 
 For complete setup, development and deployment instructions, see:
+
 - [ARCHITECTURE.md](./ARCHITECTURE.md)
 - [DEPLOYMENT.md](./DEPLOYMENT.md)
 - [BACKEND_IMPROVEMENTS.md](./BACKEND_IMPROVEMENTS.md)

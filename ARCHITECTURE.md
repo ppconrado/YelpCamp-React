@@ -20,6 +20,7 @@
 JosePauloCamp is a full-stack campground review platform built as a Single Page Application (SPA). Users can browse campgrounds, view locations on interactive maps, create accounts, add new campgrounds with images, and leave reviews.
 
 ### Key Features
+
 - 🏕️ Browse and search campgrounds with pagination
 - 🗺️ Interactive Mapbox maps with cluster visualization
 - 👤 User authentication and authorization
@@ -110,6 +111,7 @@ JosePauloCamp is a full-stack campground review platform built as a Single Page 
 ## Technology Stack
 
 ### Frontend
+
 - **Framework**: React 19.0
 - **Build Tool**: Vite 7.0
 - **UI Library**: Bootstrap 5.3
@@ -120,6 +122,7 @@ JosePauloCamp is a full-stack campground review platform built as a Single Page 
 - **Routing**: React Router DOM v6
 
 ### Backend
+
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js 4.x
 - **Authentication**: Passport.js (Local Strategy)
@@ -130,11 +133,13 @@ JosePauloCamp is a full-stack campground review platform built as a Single Page 
 - **Security**: Helmet, CORS, express-rate-limit, express-mongo-sanitize
 
 ### Database & Services
+
 - **Database**: MongoDB Atlas (cloud)
 - **Image Storage**: Cloudinary
 - **Maps & Geocoding**: Mapbox API
 
 ### Deployment
+
 - **Frontend**: Vercel
 - **Backend**: Render
 - **Version Control**: GitHub
@@ -144,6 +149,7 @@ JosePauloCamp is a full-stack campground review platform built as a Single Page 
 ## Data Flow
 
 ### 1. Page Load Flow
+
 ```
 User Browser
     │
@@ -162,6 +168,7 @@ User Browser
 ```
 
 ### 2. Create Campground Flow
+
 ```
 User fills form with images
     │
@@ -188,6 +195,7 @@ User fills form with images
 ```
 
 ### 3. Review Creation Flow
+
 ```
 User submits review (rating + text)
     │
@@ -268,6 +276,7 @@ User requests protected resource
 ```
 
 ### Session Configuration (Production)
+
 ```javascript
 {
   store: MongoDBStore,          // Persist sessions in MongoDB
@@ -324,7 +333,7 @@ User requests protected resource
         │
         └─► Save to MongoDB
             └─► campground.images = [
-                  { url: "https://res.cloudinary.com/...", 
+                  { url: "https://res.cloudinary.com/...",
                     filename: "YelpCamp/abc123" }
                 ]
 
@@ -340,6 +349,7 @@ User requests protected resource
 ## Database Schema
 
 ### Users Collection
+
 ```javascript
 {
   _id: ObjectId,
@@ -353,6 +363,7 @@ User requests protected resource
 ```
 
 ### Campgrounds Collection
+
 ```javascript
 {
   _id: ObjectId,
@@ -380,6 +391,7 @@ campgrounds.author: 1              // Fast author lookup
 ```
 
 ### Reviews Collection
+
 ```javascript
 {
   _id: ObjectId,
@@ -395,6 +407,7 @@ reviews.author: 1       // Fast author lookup
 ```
 
 ### Sessions Collection (connect-mongo)
+
 ```javascript
 {
   _id: String,          // session_id
@@ -413,6 +426,7 @@ reviews.author: 1       // Fast author lookup
 ## API Endpoints
 
 ### Authentication
+
 ```
 POST   /api/register       - Create new user account
 POST   /api/login          - Authenticate user
@@ -421,6 +435,7 @@ GET    /api/current-user   - Get logged-in user info
 ```
 
 ### Campgrounds
+
 ```
 GET    /api/campgrounds              - List all (paginated)
   Query params: ?page=1&limit=12&sort=-createdAt
@@ -438,6 +453,7 @@ DELETE /api/campgrounds/:id          - Delete campground (owner only)
 ```
 
 ### Reviews
+
 ```
 POST   /api/campgrounds/:id/reviews         - Create review (auth required)
   Body: { review: { rating, body } }
@@ -446,6 +462,7 @@ DELETE /api/campgrounds/:id/reviews/:reviewId - Delete review (owner only)
 ```
 
 ### Health & Debug
+
 ```
 GET    /health                      - Health check
   Response: { status: 'ok', uptime, timestamp }
@@ -461,6 +478,7 @@ GET    /api/debug/session           - Session debug info (development)
 ## Security Features
 
 ### 1. Authentication & Authorization
+
 - ✅ Secure password hashing (pbkdf2)
 - ✅ Session-based authentication (not JWT for better security)
 - ✅ HttpOnly cookies (XSS protection)
@@ -468,18 +486,21 @@ GET    /api/debug/session           - Session debug info (development)
 - ✅ Password requirements: 8+ chars, uppercase, lowercase, number
 
 ### 2. Rate Limiting
+
 ```javascript
 // General API: 100 requests per 15 minutes
 // Auth endpoints: 5 requests per 15 minutes
 ```
 
 ### 3. Input Validation & Sanitization
+
 - ✅ Joi schema validation (backend)
 - ✅ Zod schema validation (frontend)
 - ✅ MongoDB query sanitization (prevents NoSQL injection)
 - ✅ HTML/XSS sanitization
 
 ### 4. HTTP Security Headers (Helmet)
+
 ```
 Content-Security-Policy
 X-Content-Type-Options: nosniff
@@ -489,6 +510,7 @@ Strict-Transport-Security: max-age=31536000
 ```
 
 ### 5. CORS Configuration
+
 ```javascript
 {
   origin: [localhost, FRONTEND_URL],
@@ -499,6 +521,7 @@ Strict-Transport-Security: max-age=31536000
 ```
 
 ### 6. File Upload Security
+
 - ✅ File type validation (images only)
 - ✅ File size limits
 - ✅ Cloudinary virus scanning
@@ -549,6 +572,7 @@ Strict-Transport-Security: max-age=31536000
 ```
 
 ### Deployment Flow
+
 ```
 Developer pushes to GitHub
     │
@@ -568,11 +592,13 @@ Developer pushes to GitHub
 ### Environment-Specific Configuration
 
 **Development**
+
 - Frontend: `http://localhost:5173`
 - Backend: `http://localhost:3000`
 - Cookies: `sameSite: 'lax'`, `secure: false`
 
 **Production**
+
 - Frontend: `https://josepaulocamp.vercel.app`
 - Backend: `https://josepaulocamp-backend.onrender.com`
 - Cookies: `sameSite: 'none'`, `secure: true`
@@ -583,6 +609,7 @@ Developer pushes to GitHub
 ## Performance Optimizations
 
 ### Frontend
+
 - ✅ Code splitting (React.lazy)
 - ✅ Image lazy loading
 - ✅ Vite's aggressive tree-shaking
@@ -590,6 +617,7 @@ Developer pushes to GitHub
 - ✅ Loading skeletons for better UX
 
 ### Backend
+
 - ✅ MongoDB indexes on frequently queried fields
 - ✅ Pagination (limits query size)
 - ✅ Connection pooling (Mongoose default)
@@ -597,6 +625,7 @@ Developer pushes to GitHub
 - ✅ Cloudinary CDN for images
 
 ### Database
+
 - ✅ Geospatial index (`2dsphere`) for location queries
 - ✅ Compound indexes for common query patterns
 - ✅ TTL index on sessions (auto-cleanup)
@@ -606,6 +635,7 @@ Developer pushes to GitHub
 ## Future Enhancements
 
 ### Planned Features
+
 - [ ] Full-text search on campgrounds
 - [ ] User profiles with avatar upload
 - [ ] Favorite/bookmark campgrounds
@@ -616,6 +646,7 @@ Developer pushes to GitHub
 - [ ] Mobile native app (React Native)
 
 ### Technical Improvements
+
 - [ ] Migrate to TypeScript
 - [ ] Add end-to-end tests (Playwright)
 - [ ] Implement Redis caching layer
@@ -632,22 +663,27 @@ Developer pushes to GitHub
 ### Common Issues
 
 **1. 401 Unauthorized on Review Creation**
+
 - **Cause**: Session cookies not persisting across domains
 - **Solution**: Ensure `trust proxy: 1` is set in production
 
 **2. CORS Errors**
+
 - **Cause**: FRONTEND_URL not set correctly on Render
 - **Solution**: Check environment variable matches exact Vercel URL (no trailing slash)
 
 **3. Images Not Uploading**
+
 - **Cause**: Cloudinary credentials missing or incorrect
 - **Solution**: Verify all `CLOUDINARY_*` variables are set
 
 **4. Map Not Displaying**
+
 - **Cause**: Invalid Mapbox token or missing in environment
 - **Solution**: Check `VITE_MAPBOX_TOKEN` on frontend, `MAPBOX_TOKEN` on backend
 
 **5. Slow Backend Response on First Request**
+
 - **Cause**: Render free tier spins down after inactivity
 - **Solution**: Expected behavior - subsequent requests will be fast
 

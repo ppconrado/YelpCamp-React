@@ -30,11 +30,11 @@ module.exports.register = async (req, res, next) => {
     const registeredUser = await User.register(user, password); // salt/hash
     req.login(registeredUser, (err) => {
       if (err) return next(err);
-      
+
       // Força o salvamento da sessão
       req.session.save((saveErr) => {
         if (saveErr) return next(saveErr);
-        
+
         // Em vez de redirecionar, retorna o usuário e a mensagem flash
         res.status(201).json({
           user: registeredUser,
@@ -58,7 +58,7 @@ module.exports.login = (req, res) => {
     if (err) {
       return res.status(500).json({ error: 'Erro ao salvar sessão' });
     }
-    
+
     // Retorna o usuário logado e a mensagem flash
     res.json({
       user: req.user,

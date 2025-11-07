@@ -6,10 +6,12 @@ This guide describes how to manually verify each implemented backend improvement
 
 Status: ✅ Working
 Expected Behavior:
+
 - Server refuses to start if a required variable like `SECRET` is missing.
 - After adding it, console shows: `✅ Environment variables validated successfully`.
 
 How to Trigger:
+
 - Temporarily rename `.env` then start the server.
 - Restore `.env` and restart.
 
@@ -20,16 +22,21 @@ How to Trigger:
 Open any API route and watch server console for colored output.
 
 Browser:
+
 - http://localhost:3000/api/campgrounds
 
 PowerShell:
+
 ```powershell
 Invoke-WebRequest -Uri http://localhost:3000/api/campgrounds -UseBasicParsing
 ```
+
 Expected Log Example:
+
 ```
 GET /api/campgrounds 200 45.234 ms - 1234
 ```
+
 (200 in green, errors in red.)
 
 ---
@@ -37,19 +44,24 @@ GET /api/campgrounds 200 45.234 ms - 1234
 ## 🧪 TEST 3: Rate Limiting
 
 ### 3A. General Limit (100 requests / 15 min)
+
 Hard to hit manually; script below approximates it.
+
 ```powershell
 1..105 | ForEach-Object {
   Write-Host "Request $_"
   Invoke-WebRequest -Uri http://localhost:3000/api/campgrounds -UseBasicParsing | Out-Null
 }
 ```
+
 Expected After ~100 Requests:
+
 ```json
 { "error": "Too many requests from this IP, please try again in 15 minutes." }
 ```
 
 ### 3B. Auth Limit (5 attempts / 15 min)
+
 ```powershell
 1..6 | ForEach-Object {
   Write-Host "\nAttempt $_"
@@ -57,7 +69,9 @@ Expected After ~100 Requests:
   Invoke-RestMethod -Uri http://localhost:3000/api/register -Method POST -ContentType "application/json" -Body $body
 }
 ```
+
 Expected:
+
 - Attempts 1–5: Weak password error.
 - Attempt 6: rate limit error message.
 
@@ -66,24 +80,30 @@ Expected:
 ## 🧪 TEST 4: Strong Password Validation
 
 ### 4A. Too Short
+
 ```powershell
 $body = @{ username="joao123"; email="joao@test.com"; password="abc123" } | ConvertTo-Json
 Invoke-RestMethod -Uri http://localhost:3000/api/register -Method POST -ContentType "application/json" -Body $body
 ```
+
 Expected: minimum length error.
 
 ### 4B. Missing Uppercase
+
 ```powershell
 $body = @{ username="maria456"; email="maria@test.com"; password="senhafraca123" } | ConvertTo-Json
 Invoke-RestMethod -Uri http://localhost:3000/api/register -Method POST -ContentType "application/json" -Body $body
 ```
+
 Expected: missing character class error.
 
 ### 4C. Strong Password (Success)
+
 ```powershell
 $body = @{ username="pedro789"; email="pedro@test.com"; password="SenhaForte123" } | ConvertTo-Json
 Invoke-RestMethod -Uri http://localhost:3000/api/register -Method POST -ContentType "application/json" -Body $body -SessionVariable session
 ```
+
 Expected: success JSON with welcome message.
 
 ---
@@ -92,6 +112,7 @@ Expected: success JSON with welcome message.
 
 Press Ctrl+C in the server terminal.
 Expected Output:
+
 ```
 🔄 Received shutdown signal. Shutting down gracefully...
 ✅ HTTP server closed
@@ -105,10 +126,13 @@ Expected Output:
 ```powershell
 Invoke-RestMethod -Uri http://localhost:3000/api/non-existent-route
 ```
+
 Expected JSON:
+
 ```json
 { "error": "<message>", "statusCode": 404 }
 ```
+
 In development includes `stack` trace.
 
 ---
@@ -116,19 +140,24 @@ In development includes `stack` trace.
 ## 🧪 TEST 7: MongoDB Index Verification
 
 Shell / Compass:
+
 ```javascript
 db.campgrounds.getIndexes();
 ```
+
 Expected Indexes:
+
 ```javascript
 [
   { _id: 1 },
   { author: 1 },
   { 'geometry.coordinates': '2dsphere' },
-  { title: 'text', description: 'text', location: 'text' }
+  { title: 'text', description: 'text', location: 'text' },
 ];
 ```
+
 Performance (illustrative):
+
 - Author query: ~500ms → ~5ms
 - Geospatial queries now enabled
 
@@ -162,15 +191,15 @@ Invoke-RestMethod -Uri http://localhost:3000/api/register -Method POST -ContentT
 
 ## 🎯 Summary of Expected Outcomes
 
-| Test | Improvement        | Expected Result                    |
-| ---- | ------------------ | ---------------------------------- |
-| 1️⃣   | Env Validation      | Missing var triggers clear error  |
-| 2️⃣   | Logging             | Colored request logs appear       |
-| 3️⃣   | Rate Limiting       | Block after threshold             |
-| 4️⃣   | Strong Password     | Weak rejected / strong accepted   |
-| 5️⃣   | Graceful Shutdown   | Clean server & DB close           |
-| 6️⃣   | Error Handling      | JSON error structure              |
-| 7️⃣   | Indexes             | Performance improvement visible   |
+| Test | Improvement       | Expected Result                  |
+| ---- | ----------------- | -------------------------------- |
+| 1️⃣   | Env Validation    | Missing var triggers clear error |
+| 2️⃣   | Logging           | Colored request logs appear      |
+| 3️⃣   | Rate Limiting     | Block after threshold            |
+| 4️⃣   | Strong Password   | Weak rejected / strong accepted  |
+| 5️⃣   | Graceful Shutdown | Clean server & DB close          |
+| 6️⃣   | Error Handling    | JSON error structure             |
+| 7️⃣   | Indexes           | Performance improvement visible  |
 
 ---
 

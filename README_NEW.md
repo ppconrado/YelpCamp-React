@@ -16,23 +16,27 @@ JosePauloCamp is a full-featured campground review application where users can d
 ### ✨ Key Features
 
 #### 🏕️ Campground Management
+
 - **Browse & Search**: Paginated campground listing with 12 items per page
 - **Interactive Maps**: Mapbox integration with cluster visualization and detailed location views
 - **Rich Details**: Multi-image carousels, pricing, descriptions, and author information
 - **CRUD Operations**: Create, read, update, and delete campgrounds (with authorization)
 
 #### 👤 User System
+
 - **Secure Authentication**: Session-based auth with encrypted cookies
 - **User Profiles**: Track campgrounds and reviews by author
 - **Authorization**: Owner-only edit/delete permissions
 - **Password Security**: Strong password requirements (8+ chars, uppercase, lowercase, number)
 
 #### ⭐ Review System
+
 - **Star Ratings**: 1-5 star rating system with visual display
 - **Rich Reviews**: Text reviews with author attribution
 - **Moderation**: Owner-only review deletion
 
 #### 🎨 Modern UX/UI
+
 - **Responsive Design**: Mobile-first, works on all devices
 - **Loading States**: Skeleton screens and smooth transitions
 - **Form Validation**: Real-time validation with React Hook Form + Zod
@@ -42,6 +46,7 @@ JosePauloCamp is a full-featured campground review application where users can d
 - **Breadcrumb Navigation**: Preserve pagination context
 
 #### 🔒 Security
+
 - **Session Management**: HttpOnly cookies with cross-domain support
 - **Rate Limiting**: API abuse protection (100 req/15min, auth: 5 req/15min)
 - **Input Validation**: Both frontend (Zod) and backend (Joi) validation
@@ -51,6 +56,7 @@ JosePauloCamp is a full-featured campground review application where users can d
 - **Password Hashing**: PBKDF2 encryption
 
 #### 📸 Media Management
+
 - **Multi-Image Upload**: Up to 10 images per campground
 - **Cloudinary Integration**: Cloud storage with CDN delivery
 - **Image Optimization**: Automatic resizing and compression
@@ -61,6 +67,7 @@ JosePauloCamp is a full-featured campground review application where users can d
 ## 🛠️ Technology Stack
 
 ### Frontend
+
 - **React 19** - UI framework
 - **Vite 7** - Build tool and dev server
 - **React Router v6** - Client-side routing
@@ -72,6 +79,7 @@ JosePauloCamp is a full-featured campground review application where users can d
 - **Mapbox GL JS** - Interactive maps
 
 ### Backend
+
 - **Node.js 18+** - Runtime
 - **Express.js 4** - Web framework
 - **Passport.js** - Authentication
@@ -84,6 +92,7 @@ JosePauloCamp is a full-featured campground review application where users can d
 - **CORS** - Cross-origin configuration
 
 ### Services & Infrastructure
+
 - **MongoDB Atlas** - Cloud database
 - **Cloudinary** - Image hosting/CDN
 - **Mapbox** - Maps and geocoding
@@ -96,6 +105,7 @@ JosePauloCamp is a full-featured campground review application where users can d
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 - MongoDB (local or Atlas connection string)
 - Cloudinary account
@@ -104,12 +114,14 @@ JosePauloCamp is a full-featured campground review application where users can d
 ### Installation
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/ppconrado/YelpCamp-React.git
 cd YelpCamp-React
 ```
 
 2. **Install dependencies**
+
 ```bash
 # Backend dependencies
 npm install
@@ -123,6 +135,7 @@ cd ..
 3. **Configure environment variables**
 
 Create `.env` in the root directory:
+
 ```env
 # Database
 DB_URL=mongodb://localhost:27017/yelp-camp
@@ -145,17 +158,20 @@ PORT=3000
 ```
 
 Create `client/.env.local`:
+
 ```env
 VITE_API_URL=http://localhost:3000/api
 VITE_MAPBOX_TOKEN=pk.your_mapbox_token_here
 ```
 
 4. **Seed the database (optional)**
+
 ```bash
 npm run seed
 ```
 
 5. **Start development servers**
+
 ```bash
 # Run both frontend and backend concurrently
 npm run dev:full
@@ -263,6 +279,7 @@ npm run dev:full
 ### Available Scripts
 
 **Root (Backend + Full Stack)**
+
 ```bash
 npm start              # Start production server
 npm run dev            # Start backend with nodemon
@@ -272,6 +289,7 @@ npm run build:client   # Build frontend for production
 ```
 
 **Client (Frontend only - run from `client/` directory)**
+
 ```bash
 npm run dev            # Start Vite dev server
 npm run build          # Build for production
@@ -281,18 +299,23 @@ npm run preview        # Preview production build locally
 ### Development Workflow
 
 1. **Run the full stack**:
+
    ```bash
    npm run dev:full
    ```
+
    This starts:
+
    - Backend on `http://localhost:3000` (with auto-restart)
    - Frontend on `http://localhost:5173` (with HMR)
 
 2. **Make changes**:
+
    - Frontend changes: Auto-reload with Vite HMR
    - Backend changes: Auto-restart with nodemon
 
 3. **Test authentication**:
+
    - CORS is configured for localhost
    - Cookies use `sameSite: 'lax'` in development
 
@@ -314,6 +337,7 @@ The application is configured for deployment on free-tier cloud services:
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 
 ### Production URLs
+
 - Frontend: https://josepaulocamp.vercel.app
 - Backend: https://josepaulocamp-backend.onrender.com
 
@@ -347,6 +371,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 ## 🎨 UI/UX Features
 
 ### Modern SPA Experience
+
 - ✅ Single Page Application (no full page reloads)
 - ✅ Client-side routing with React Router
 - ✅ Smooth page transitions
@@ -354,6 +379,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 - ✅ Optimistic UI updates
 
 ### Form Experience
+
 - ✅ Real-time validation with error messages
 - ✅ Floating labels that animate on focus
 - ✅ Password visibility toggle
@@ -361,6 +387,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 - ✅ Disabled submit during processing
 
 ### Mobile Optimization
+
 - ✅ Responsive design (mobile-first approach)
 - ✅ Touch-friendly buttons and inputs
 - ✅ Fixed mobile pagination controls
@@ -369,6 +396,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 - ✅ Momentum scrolling on iOS
 
 ### Visual Polish
+
 - ✅ Toast notifications (non-intrusive feedback)
 - ✅ Confirmation modals for destructive actions
 - ✅ Image carousels with thumbnails
@@ -384,42 +412,53 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 ### Common Issues
 
 **1. Cannot connect to MongoDB**
+
 ```bash
 # Error: MongooseServerSelectionError: connect ECONNREFUSED
 ```
+
 - Ensure MongoDB is running locally: `mongod`
 - Or check your Atlas connection string in `.env`
 
 **2. Images not uploading**
+
 ```bash
 # Error: Cloudinary configuration error
 ```
+
 - Verify `CLOUDINARY_*` variables in `.env`
 - Check Cloudinary console for correct credentials
 
 **3. Map not displaying**
+
 ```bash
 # Blank map or "Error loading Mapbox"
 ```
+
 - Check `VITE_MAPBOX_TOKEN` in `client/.env.local`
 - Verify token is valid on Mapbox dashboard
 
 **4. CORS errors in development**
+
 ```bash
 # Access-Control-Allow-Origin error
 ```
+
 - Ensure frontend is running on `http://localhost:5173`
 - Check backend CORS config includes localhost:5173
 
 **5. Session not persisting**
+
 ```bash
 # 401 Unauthorized after login
 ```
+
 - In production: Verify `FRONTEND_URL` has no trailing slash
 - Check cookie settings: `secure: true` requires HTTPS
 - Verify `trust proxy` is set in production
 
 **6. Render backend slow on first request**
+
 - **Expected behavior**: Free tier spins down after 15min inactivity
 - First request wakes up the server (~30s delay)
 - Subsequent requests are fast
@@ -429,6 +468,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 ## 🚧 Future Enhancements
 
 ### Planned Features
+
 - [ ] Advanced search and filtering (price range, rating, amenities)
 - [ ] User profiles with avatar upload
 - [ ] Favorite/bookmark campgrounds
@@ -441,6 +481,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 - [ ] Dark mode toggle
 
 ### Technical Improvements
+
 - [ ] Migrate to TypeScript
 - [ ] Add unit tests (Jest, React Testing Library)
 - [ ] Add E2E tests (Playwright)
@@ -464,6 +505,7 @@ MIT License - feel free to use this project for learning or your own application
 ## 👨‍💻 Author
 
 **Jose Paulo Conrado**
+
 - GitHub: [@ppconrado](https://github.com/ppconrado)
 
 ---

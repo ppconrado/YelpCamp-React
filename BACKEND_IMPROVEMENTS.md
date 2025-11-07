@@ -1,59 +1,71 @@
 # Backend Improvements - JosePauloCamp
+
 # Backend Improvements - JosePauloCamp
 
 ## 🎯 Implemented Improvements
 
 ### 1. Enhanced Error Handling
+
 - Centralized error middleware with detailed logging
 - Stack trace visible only in development
 - Consistent JSON error responses for all API routes
 - Clear and descriptive error messages
 
 ### 2. Request Logging (Morgan)
+
 - `dev` format for colorful development logs
 - `combined` format for production
 - Tracks all HTTP requests with response time
 
 ### 3. Environment Validation
+
 - Automatic validation of required environment variables at startup
 - Warnings for optional ones (MAPBOX_TOKEN, Cloudinary)
 - Fail fast with clear messages if configuration is incomplete
 - File: `utils/validateEnv.js`
 
 ### 4. Rate Limiting (Abuse Protection)
+
 - General API limit: 100 requests/IP per 15 minutes
 - Auth endpoints: 5 attempts per 15 minutes
 - Protects against brute-force and simple DDoS
 - Successful auth requests are skipped from the limit
 
 ### 5. Strong Password Policy
+
 - Minimum 8 characters
 - Must include uppercase, lowercase and number
 - Validated on backend before user creation
 - Clear feedback for unmet requirements
 
 ### 6. MongoDB Indexes
+
 **Campground Model:**
+
 - `author`: filter by author ("my campgrounds")
 - `geometry.coordinates`: geospatial queries (proximity)
 - `title, description, location`: full-text search
 
 **User Model:**
+
 - `email`: fast lookup by email
 - `username`: lookup by username (unique by plugin)
 
 **Review Model:**
+
 - `author`: filter reviews by author
 
 **Benefits:** Queries up to 100x faster on large collections
 
 ### 7. Graceful Shutdown
+
 - Properly close HTTP server on SIGTERM/SIGINT
 - Close MongoDB connections before exit
 - 10-second timeout to force shutdown if needed
 - Important for containerized deploys and zero-downtime updates
 
 ### 8. Production Configuration
+
 - CORS with dynamic whitelist (localhost:5173 and FRONTEND_URL)
 - Helmet with CSP tuned for Mapbox and Cloudinary
 - Credentials enabled in CORS with `exposedHeaders: ["Set-Cookie"]`
@@ -63,20 +75,24 @@
 - Appropriate logs per environment
 
 ### 9. Health and Version Endpoints
+
 - `GET/HEAD /health` for healthcheck and uptime
 - `GET /version` returns name, version, Node, and environment (useful for monitoring)
 
 ### 10. Protected SPA Fallback
+
 - Frontend fallback serves only routes that do NOT start with `/api`
 - Prevents HTML being returned to API routes (avoids errors like "Unexpected token '<' ... not valid JSON")
 
 ### 11. Cross‑Domain Sessions and Cookies
+
 - Session cookie named (`yelpcamp.sid`), `httpOnly`, `SameSite=None`, `Secure` in production
 - `app.set('trust proxy', 1)` in production for `Secure` cookies behind proxy
 - `session` with `proxy: true` in production
 - CORS with `credentials: true` and `exposedHeaders: ["Set-Cookie"]` to allow cross-domain cookies
 
 ### 12. Campgrounds Pagination
+
 - List endpoint supports `page`, `limit` (capped at 50), and `sort`
 - Response includes `total`, `totalPages`, `hasNext`, `hasPrev` for smoother UX
 
@@ -85,11 +101,13 @@
 ## 🚀 How to Use
 
 ### Development
+
 ```bash
 npm run dev:full
 ```
 
 ### Production
+
 For deployment steps (Render + Vercel), see `DEPLOYMENT.md`.
 
 ---
@@ -97,6 +115,7 @@ For deployment steps (Render + Vercel), see `DEPLOYMENT.md`.
 ## 🔐 Required Environment Variables
 
 Create `.env` at the root:
+
 ```
 DB_URL=mongodb://localhost:27017/yelp-camp
 SECRET=your_strong_secret_here
@@ -104,6 +123,7 @@ FRONTEND_URL=https://your-frontend.vercel.app  # required in production for CORS
 ```
 
 ### Optional (recommended):
+
 ```
 MAPBOX_TOKEN=pk.your_token_here
 CLOUDINARY_CLOUD_NAME=...
@@ -118,13 +138,13 @@ PORT=3000
 
 ### Before vs After
 
-| Metric            | Before | After  | Gain    |
-| ----------------- | ------ | ------ | ------- |
-| Author query      | ~500ms | ~5ms   | 100x    |
-| Geospatial search | N/A    | ~10ms  | ✅ New  |
-| Text search       | ~1s    | ~50ms  | 20x     |
-| Env validation    | Manual | Auto   | ✅      |
-| Auth protection   | None   | Rate   | ✅      |
+| Metric            | Before | After | Gain   |
+| ----------------- | ------ | ----- | ------ |
+| Author query      | ~500ms | ~5ms  | 100x   |
+| Geospatial search | N/A    | ~10ms | ✅ New |
+| Text search       | ~1s    | ~50ms | 20x    |
+| Env validation    | Manual | Auto  | ✅     |
+| Auth protection   | None   | Rate  | ✅     |
 
 ---
 
@@ -163,4 +183,5 @@ PORT=3000
 - Text index supports `{ $text: { $search: "beach camping" } }`
 - `Set-Cookie` header exposed via CORS; cookies use `SameSite=None` + `Secure` in production
 - SPA fallback excludes `/api/*` via negative regex to prevent HTML responses on API calls
+
 6. **Tests**: Unit tests (Jest) and E2E (Cypress)
