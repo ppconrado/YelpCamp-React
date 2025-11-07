@@ -15,8 +15,9 @@ JosePauloCamp is a full-featured campground review application where users can d
 
 For complete setup, development and deployment instructions, see:
 
-- [ARCHITECTURE.md](./ARCHITECTURE.md)
-- [DEPLOYMENT.md](./DEPLOYMENT.md)
-- [BACKEND_IMPROVEMENTS.md](./BACKEND_IMPROVEMENTS.md)
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — Technical architecture and data flows
+- [DEPLOYMENT.md](./DEPLOYMENT.md) — Step-by-step deployment to Vercel + Render
+- [BACKEND_IMPROVEMENTS.md](./BACKEND_IMPROVEMENTS.md) — Backend optimizations and security
+- [TEST_IMPROVEMENTS.md](./TEST_IMPROVEMENTS.md) — Manual testing guide for all backend features
 
 If you prefer a full, detailed README, see the expanded version in [README_NEW.md](./README_NEW.md) — this file is a concise overview.

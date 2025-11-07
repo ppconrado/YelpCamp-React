@@ -245,17 +245,6 @@ app.get('/version', (req, res) => {
   res.json({ name, version, node: process.version, env: process.env.NODE_ENV });
 });
 
-// Debug endpoint para verificar autenticação (remover em produção final)
-app.get('/api/debug/session', (req, res) => {
-  res.json({
-    isAuthenticated: req.isAuthenticated(),
-    sessionID: req.sessionID,
-    hasSession: !!req.session,
-    user: req.user ? { id: req.user._id, username: req.user.username } : null,
-    cookie: req.session?.cookie,
-  });
-});
-
 // ROTA DE FALLBACK PARA SERVIR O FRONTEND
 // Em produção local/monorepo servimos o build do React (client/dist) SE existir.
 // No Render (backend-only), o client/dist não existe; então respondemos com uma mensagem da API.
