@@ -1,10 +1,22 @@
 import axios from 'axios';
 
-// Prefer VITE_API_URL; otherwise use current origin for proxy-friendly same-site calls
-const apiBaseUrl =
-  import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim() !== ''
-    ? import.meta.env.VITE_API_URL
-    : (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+// In production, force same-origin (Vercel proxy handles /api → backend)
+// In development, use VITE_API_URL or fallback to current origin/localhost
+let apiBaseUrl;
+if (typeof window !== 'undefined') {
+  const origin = window.location.origin;
+  if (import.meta.env.PROD) {
+    apiBaseUrl = origin;
+  } else {
+    apiBaseUrl =
+      (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim()) ||
+      origin ||
+      'http://localhost:3000';
+  }
+} else {
+  apiBaseUrl = (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim()) || 'http://localhost:3000';
+}
+
 const baseURL = `${apiBaseUrl}/api`;
 
 const http = axios.create({
