@@ -10,7 +10,8 @@
     "client": "npm run dev --prefix client",
     "dev:full": "concurrently \"npm run start\" \"npm run client\"",
     "build:client": "npm run build --prefix client",
-    "seed": "node seeds/index.js"
+    "seed": "node seeds/index.js",
+    "migrate:backfill-timestamps": "node scripts/backfill-timestamps.js"
   },
   "keywords": [],
   "author": "Jose Paulo Archetti Conrado",
