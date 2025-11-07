@@ -7,8 +7,14 @@ function getObjectIdTimestamp(id) {
 }
 
 async function backfillModel(Model) {
-  const missingCreated = await Model.find({ createdAt: { $exists: false } }, { _id: 1 }).lean();
-  const missingUpdated = await Model.find({ updatedAt: { $exists: false } }, { _id: 1 }).lean();
+  const missingCreated = await Model.find(
+    { createdAt: { $exists: false } },
+    { _id: 1 }
+  ).lean();
+  const missingUpdated = await Model.find(
+    { updatedAt: { $exists: false } },
+    { _id: 1 }
+  ).lean();
 
   const createdOps = missingCreated.map((doc) => ({
     updateOne: {
@@ -23,7 +29,9 @@ async function backfillModel(Model) {
   }));
 
   const updatedOnlyOps = missingUpdated
-    .filter((doc) => !missingCreated.find((d) => String(d._id) === String(doc._id)))
+    .filter(
+      (doc) => !missingCreated.find((d) => String(d._id) === String(doc._id))
+    )
     .map((doc) => ({
       updateOne: {
         filter: { _id: doc._id },
@@ -58,9 +66,16 @@ module.exports.backfillTimestamps = async (req, res) => {
 
   // Preview counts if dryRun
   if (dryRun) {
-    const cgMissing = await Campground.countDocuments({ createdAt: { $exists: false } });
-    const rvMissing = await Review.countDocuments({ createdAt: { $exists: false } });
-    return res.json({ dryRun: true, counts: { campgroundsMissing: cgMissing, reviewsMissing: rvMissing } });
+    const cgMissing = await Campground.countDocuments({
+      createdAt: { $exists: false },
+    });
+    const rvMissing = await Review.countDocuments({
+      createdAt: { $exists: false },
+    });
+    return res.json({
+      dryRun: true,
+      counts: { campgroundsMissing: cgMissing, reviewsMissing: rvMissing },
+    });
   }
 
   const cg = await backfillModel(Campground);

@@ -205,9 +205,14 @@ const CampgroundShow = () => {
               style={{ backgroundColor: '#f8f9fa' }}
             >
               {(() => {
-                const ts = deriveTimestampFromId(campground._id, campground.createdAt);
+                const ts = deriveTimestampFromId(
+                  campground._id,
+                  campground.createdAt
+                );
                 return ts ? (
-                  <span title={new Date(ts).toLocaleString()}>{timeAgo(ts, now)}</span>
+                  <span title={new Date(ts).toLocaleString()}>
+                    {timeAgo(ts, now)}
+                  </span>
                 ) : (
                   <span />
                 );
@@ -243,7 +248,10 @@ const CampgroundShow = () => {
                 <h6 className="card-subtitle mb-2 text-muted">
                   By {review.author.username}{' '}
                   {(() => {
-                    const ts = deriveTimestampFromId(review._id, review.createdAt);
+                    const ts = deriveTimestampFromId(
+                      review._id,
+                      review.createdAt
+                    );
                     return ts ? (
                       <small
                         className="text-muted"

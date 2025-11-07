@@ -20,12 +20,10 @@ module.exports.createReview = async (req, res) => {
     path: 'author',
     select: 'username',
   });
-  res
-    .status(201)
-    .json({
-      review: populatedReview,
-      message: 'Review adicionada com sucesso!',
-    });
+  res.status(201).json({
+    review: populatedReview,
+    message: 'Review adicionada com sucesso!',
+  });
 };
 
 // Remover uma review

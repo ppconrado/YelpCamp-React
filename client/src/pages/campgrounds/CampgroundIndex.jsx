@@ -169,7 +169,10 @@ const CampgroundIndex = () => {
                   </p>
                   <p className="card-text">
                     {(() => {
-                      const ts = deriveTimestampFromId(campground._id, campground.createdAt);
+                      const ts = deriveTimestampFromId(
+                        campground._id,
+                        campground.createdAt
+                      );
                       return ts ? (
                         <small
                           className="text-muted"
