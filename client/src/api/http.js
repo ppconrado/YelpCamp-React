@@ -14,7 +14,9 @@ if (typeof window !== 'undefined') {
       'http://localhost:3000';
   }
 } else {
-  apiBaseUrl = (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim()) || 'http://localhost:3000';
+  apiBaseUrl =
+    (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim()) ||
+    'http://localhost:3000';
 }
 
 const baseURL = `${apiBaseUrl}/api`;
