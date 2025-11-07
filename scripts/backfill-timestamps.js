@@ -17,14 +17,20 @@ const Review = require('../models/review');
 
 async function backfillModel(Model, label) {
   // Find documents missing createdAt
-  const missingCreated = await Model.find({ createdAt: { $exists: false } }, {
-    _id: 1,
-  }).lean();
+  const missingCreated = await Model.find(
+    { createdAt: { $exists: false } },
+    {
+      _id: 1,
+    }
+  ).lean();
 
   // Find documents missing updatedAt
-  const missingUpdated = await Model.find({ updatedAt: { $exists: false } }, {
-    _id: 1,
-  }).lean();
+  const missingUpdated = await Model.find(
+    { updatedAt: { $exists: false } },
+    {
+      _id: 1,
+    }
+  ).lean();
 
   const createdOps = missingCreated.map((doc) => {
     const created = new mongoose.Types.ObjectId(doc._id).getTimestamp();
@@ -37,7 +43,9 @@ async function backfillModel(Model, label) {
   });
 
   const updatedOnlyOps = missingUpdated
-    .filter((doc) => !missingCreated.find((d) => String(d._id) === String(doc._id)))
+    .filter(
+      (doc) => !missingCreated.find((d) => String(d._id) === String(doc._id))
+    )
     .map((doc) => {
       const created = new mongoose.Types.ObjectId(doc._id).getTimestamp();
       return {
@@ -55,13 +63,17 @@ async function backfillModel(Model, label) {
   }
 
   const res = await Model.bulkWrite(ops, { ordered: false });
-  const modified = (res.nModified || res.modifiedCount || 0);
+  const modified = res.nModified || res.modifiedCount || 0;
   console.log(`[${label}] Backfilled documents: ${modified}`);
   return { modified };
 }
 
 async function main() {
-  const safeUrl = dbUrl ? (dbUrl.startsWith('mongodb+srv://') ? 'mongodb+srv://<hidden>@<cluster>/<db>' : 'mongodb://<hidden>@<host>/<db>') : 'N/A';
+  const safeUrl = dbUrl
+    ? dbUrl.startsWith('mongodb+srv://')
+      ? 'mongodb+srv://<hidden>@<cluster>/<db>'
+      : 'mongodb://<hidden>@<host>/<db>'
+    : 'N/A';
   console.log('Connecting to MongoDB:', safeUrl);
   await mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -73,7 +85,10 @@ async function main() {
   try {
     const cg = await backfillModel(Campground, 'Campground');
     const rv = await backfillModel(Review, 'Review');
-    console.log('Done. Summary:', { campgrounds: cg.modified, reviews: rv.modified });
+    console.log('Done. Summary:', {
+      campgrounds: cg.modified,
+      reviews: rv.modified,
+    });
   } catch (err) {
     console.error('Backfill error:', err);
     process.exitCode = 1;
