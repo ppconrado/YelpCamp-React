@@ -237,6 +237,7 @@ body.camp-scroll .footer {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   /* Melhorar performance de toque em mobile */
   touch-action: manipulation;
+  height: 100%; /* Ensure card takes full row height */
 }
 
 .camp-card:hover {
@@ -246,8 +247,26 @@ body.camp-scroll .footer {
 
 .camp-card-img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: 220px; /* Fixed height for all cards */
+  object-fit: cover; /* Crop image to fit while maintaining aspect ratio */
+  object-position: center; /* Center the cropped area */
+}
+
+/* Ensure row items stretch to same height */
+.camp-card .row {
+  height: 100%;
+}
+
+.camp-card .col-md-4,
+.camp-card .col-md-8 {
+  display: flex;
+  flex-direction: column;
+}
+
+.camp-card .card-body {
+  flex-grow: 1; /* Allow body to expand and push timestamp to bottom */
+  display: flex;
+  flex-direction: column;
 }
 
 /* Campgrounds list page background (subtle gray so cards stand out) */
