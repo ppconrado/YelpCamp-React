@@ -74,7 +74,7 @@ const CampgroundIndex = () => {
   }, [loading, pageFromUrl]);
 
   // Criar GeoJSON para o mapa de cluster
-  const geoJson = {
+  const geoJson = React.useMemo(() => ({
     type: 'FeatureCollection',
     features: campgrounds.map((campground) => ({
       type: 'Feature',
@@ -85,7 +85,7 @@ const CampgroundIndex = () => {
         id: campground._id,
       },
     })),
-  };
+  }), [campgrounds]);
 
   const goToPage = (p) => {
     const next = Math.max(1, Math.min(p, meta.totalPages));
@@ -133,6 +133,7 @@ const CampgroundIndex = () => {
         <h1 className="mb-4">All Campgrounds</h1>
         <div className="map-card mb-4">
           <MapboxMap
+            key={`map-page-${meta.page}`}
             geoJson={geoJson}
             center={[-98.583333, 39.833333]} // US center (previous default)
             zoom={3}
