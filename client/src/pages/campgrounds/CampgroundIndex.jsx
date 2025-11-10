@@ -196,31 +196,127 @@ const CampgroundIndex = () => {
 
         {/* Pagination controls - desktop */}
         <nav
-          className="d-flex justify-content-center mt-4"
+          className="d-flex justify-content-center mt-4 mb-4"
           aria-label="Campgrounds pages"
         >
-          <ul className="pagination">
+          <ul className="pagination pagination-modern">
+            {/* First page */}
+            <li className={`page-item ${meta.page === 1 ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => goToPage(1)}
+                aria-label="First page"
+                disabled={meta.page === 1}
+              >
+                <span aria-hidden="true">&laquo;&laquo;</span>
+              </button>
+            </li>
+            
+            {/* Previous */}
             <li className={`page-item ${!meta.hasPrev ? 'disabled' : ''}`}>
               <button
                 className="page-link"
                 onClick={() => goToPage(meta.page - 1)}
-                aria-label="Anterior"
+                aria-label="Previous"
+                disabled={!meta.hasPrev}
               >
-                &laquo;
+                <span aria-hidden="true">&laquo;</span>
               </button>
             </li>
-            <li className="page-item disabled">
-              <span className="page-link">
-                Página {meta.page} de {meta.totalPages}
-              </span>
-            </li>
+
+            {/* Page numbers */}
+            {(() => {
+              const pages = [];
+              const showPages = 5; // Show 5 page numbers
+              let startPage = Math.max(1, meta.page - Math.floor(showPages / 2));
+              let endPage = Math.min(meta.totalPages, startPage + showPages - 1);
+              
+              // Adjust start if we're near the end
+              if (endPage - startPage < showPages - 1) {
+                startPage = Math.max(1, endPage - showPages + 1);
+              }
+
+              // First page + ellipsis if needed
+              if (startPage > 1) {
+                pages.push(
+                  <li key={1} className="page-item">
+                    <button className="page-link" onClick={() => goToPage(1)}>
+                      1
+                    </button>
+                  </li>
+                );
+                if (startPage > 2) {
+                  pages.push(
+                    <li key="ellipsis-start" className="page-item disabled">
+                      <span className="page-link">...</span>
+                    </li>
+                  );
+                }
+              }
+
+              // Page numbers
+              for (let i = startPage; i <= endPage; i++) {
+                pages.push(
+                  <li
+                    key={i}
+                    className={`page-item ${i === meta.page ? 'active' : ''}`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => goToPage(i)}
+                      aria-current={i === meta.page ? 'page' : undefined}
+                    >
+                      {i}
+                    </button>
+                  </li>
+                );
+              }
+
+              // Ellipsis + last page if needed
+              if (endPage < meta.totalPages) {
+                if (endPage < meta.totalPages - 1) {
+                  pages.push(
+                    <li key="ellipsis-end" className="page-item disabled">
+                      <span className="page-link">...</span>
+                    </li>
+                  );
+                }
+                pages.push(
+                  <li key={meta.totalPages} className="page-item">
+                    <button
+                      className="page-link"
+                      onClick={() => goToPage(meta.totalPages)}
+                    >
+                      {meta.totalPages}
+                    </button>
+                  </li>
+                );
+              }
+
+              return pages;
+            })()}
+
+            {/* Next */}
             <li className={`page-item ${!meta.hasNext ? 'disabled' : ''}`}>
               <button
                 className="page-link"
                 onClick={() => goToPage(meta.page + 1)}
-                aria-label="Próxima"
+                aria-label="Next"
+                disabled={!meta.hasNext}
               >
-                &raquo;
+                <span aria-hidden="true">&raquo;</span>
+              </button>
+            </li>
+
+            {/* Last page */}
+            <li className={`page-item ${meta.page === meta.totalPages ? 'disabled' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => goToPage(meta.totalPages)}
+                aria-label="Last page"
+                disabled={meta.page === meta.totalPages}
+              >
+                <span aria-hidden="true">&raquo;&raquo;</span>
               </button>
             </li>
           </ul>
@@ -231,21 +327,23 @@ const CampgroundIndex = () => {
       <div className="d-md-none mobile-pager-fixed">
         <div className="container d-flex justify-content-between align-items-center">
           <button
-            className="btn btn-outline-secondary btn-sm"
+            className="btn btn-pager"
             disabled={!meta.hasPrev}
             onClick={() => goToPage(meta.page - 1)}
+            aria-label="Previous"
           >
-            Anterior
+            <span>&laquo;</span>
           </button>
-          <span className="small">
-            {meta.page}/{meta.totalPages}
+          <span className="mobile-page-info">
+            {meta.page} / {meta.totalPages}
           </span>
           <button
-            className="btn btn-outline-secondary btn-sm"
+            className="btn btn-pager"
             disabled={!meta.hasNext}
             onClick={() => goToPage(meta.page + 1)}
+            aria-label="Next"
           >
-            Próxima
+            <span>&raquo;</span>
           </button>
         </div>
       </div>
