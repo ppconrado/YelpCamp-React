@@ -142,15 +142,6 @@ const MapboxMap = ({
           new mapboxgl.LngLatBounds(coords[0], coords[0])
         );
         map.current.fitBounds(bounds, { padding: 40, maxZoom: fitMaxZoom });
-        
-        // Trigger spin animation when fitting to new bounds (page navigation)
-        if (spinOnLoad && map.current) {
-          const currentBearing = map.current.getBearing() || 0;
-          map.current.rotateTo(currentBearing + 360, {
-            duration: 3000,
-            easing: (t) => t,
-          });
-        }
       }
 
       geoJson.features.forEach((feature) => {
@@ -172,7 +163,7 @@ const MapboxMap = ({
     return () => {
       markers.forEach((m) => m.remove());
     };
-  }, [geoJson, isLoaded, fitToBounds, fitMaxZoom, spinOnLoad]);
+  }, [geoJson, isLoaded, fitToBounds, fitMaxZoom]);
 
   if (!hasToken) {
     return (
