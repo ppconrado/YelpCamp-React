@@ -251,8 +251,10 @@ body.camp-scroll .footer {
 .camp-card-img {
   width: 100%;
   height: 100%; /* Fill the entire image column */
+  min-height: 200px; /* Ensure minimum height matches card */
   object-fit: cover; /* Crop image to fit while maintaining aspect ratio */
   object-position: center; /* Center the cropped area */
+  display: block; /* Remove any inline spacing */
 }
 
 /* Ensure row fills the card height */
