@@ -237,9 +237,10 @@ body.camp-scroll .footer {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   /* Melhorar performance de toque em mobile */
   touch-action: manipulation;
-  min-height: 220px; /* Force minimum card height to match image */
+  height: 250px; /* FIXED height for all cards */
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Hide overflow to maintain fixed height */
 }
 
 .camp-card:hover {
@@ -249,34 +250,58 @@ body.camp-scroll .footer {
 
 .camp-card-img {
   width: 100%;
-  height: 220px; /* Fixed height for all cards */
+  height: 250px; /* Match card height */
   object-fit: cover; /* Crop image to fit while maintaining aspect ratio */
   object-position: center; /* Center the cropped area */
   flex-shrink: 0; /* Prevent image from shrinking */
 }
 
-/* Ensure row items stretch to same height */
-.camp-card .row {
-  flex: 1; /* Allow row to grow and fill card */
+/* Ensure row fills the card height */
+.camp-card > .row {
+  flex: 1;
   margin: 0;
+  min-height: 250px;
+  max-height: 250px;
 }
 
 .camp-card .col-md-4 {
   padding: 0; /* Remove padding so image fills completely */
-  display: flex;
+  height: 250px;
+  overflow: hidden;
 }
 
 .camp-card .col-md-8 {
   display: flex;
   flex-direction: column;
-  min-height: 220px; /* Match image height */
+  height: 250px;
+  overflow: hidden; /* Prevent content from expanding card */
 }
 
 .camp-card .card-body {
-  flex: 1; /* Allow body to expand and fill available space */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Distribute content with timestamp at bottom */
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.camp-card .card-body .card-title {
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit title to 2 lines */
+  -webkit-box-orient: vertical;
+}
+
+.camp-card .card-body .card-text {
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+.camp-card .card-body .card-text:last-child {
+  margin-top: auto; /* Push timestamp to bottom */
+  margin-bottom: 0;
 }
 
 /* Campgrounds list page background (subtle gray so cards stand out) */
