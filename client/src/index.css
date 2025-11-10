@@ -237,7 +237,7 @@ body.camp-scroll .footer {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   /* Melhorar performance de toque em mobile */
   touch-action: manipulation;
-  height: 250px; /* FIXED height for all cards */
+  height: 200px; /* FIXED height for all cards */
   display: flex;
   flex-direction: column;
   overflow: hidden; /* Hide overflow to maintain fixed height */
@@ -250,30 +250,28 @@ body.camp-scroll .footer {
 
 .camp-card-img {
   width: 100%;
-  height: 250px; /* Match card height */
+  height: 100%; /* Fill the entire image column */
   object-fit: cover; /* Crop image to fit while maintaining aspect ratio */
   object-position: center; /* Center the cropped area */
-  flex-shrink: 0; /* Prevent image from shrinking */
 }
 
 /* Ensure row fills the card height */
 .camp-card > .row {
   flex: 1;
   margin: 0;
-  min-height: 250px;
-  max-height: 250px;
+  height: 200px;
 }
 
 .camp-card .col-md-4 {
   padding: 0; /* Remove padding so image fills completely */
-  height: 250px;
+  height: 200px;
   overflow: hidden;
 }
 
 .camp-card .col-md-8 {
   display: flex;
   flex-direction: column;
-  height: 250px;
+  height: 200px;
   overflow: hidden; /* Prevent content from expanding card */
 }
 
@@ -290,13 +288,15 @@ body.camp-scroll .footer {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit title to 2 lines */
+  -webkit-line-clamp: 1; /* Limit title to 1 line */
   -webkit-box-orient: vertical;
+  font-size: 1.1rem;
 }
 
 .camp-card .card-body .card-text {
   margin-bottom: 0.5rem;
   flex-shrink: 0;
+  font-size: 0.9rem;
 }
 
 .camp-card .card-body .card-text:last-child {
