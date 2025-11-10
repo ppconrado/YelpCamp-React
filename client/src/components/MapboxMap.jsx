@@ -136,12 +136,26 @@ const MapboxMap = ({
       const coords = geoJson.features
         .map((f) => f?.geometry?.coordinates)
         .filter(Boolean);
-      if (fitToBounds && coords.length > 1) {
-        const bounds = coords.reduce(
-          (b, c) => b.extend(c),
-          new mapboxgl.LngLatBounds(coords[0], coords[0])
-        );
-        map.current.fitBounds(bounds, { padding: 40, maxZoom: fitMaxZoom });
+      if (fitToBounds && coords.length > 0) {
+        if (coords.length === 1) {
+          // Single location: center on it
+          map.current.flyTo({
+            center: coords[0],
+            zoom: fitMaxZoom || 10,
+            duration: 2000,
+          });
+        } else {
+          // Multiple locations: fit bounds with animation
+          const bounds = coords.reduce(
+            (b, c) => b.extend(c),
+            new mapboxgl.LngLatBounds(coords[0], coords[0])
+          );
+          map.current.fitBounds(bounds, { 
+            padding: 40, 
+            maxZoom: fitMaxZoom,
+            duration: 2000,
+          });
+        }
       }
 
       geoJson.features.forEach((feature) => {
