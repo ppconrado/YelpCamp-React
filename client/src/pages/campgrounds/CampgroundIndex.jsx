@@ -94,7 +94,15 @@ const CampgroundIndex = () => {
       type: 'Feature',
       geometry: campground.geometry,
       properties: {
-        popUpMarkup: `<h5>${campground.title}</h5><p>${campground.location}</p>`,
+        popUpMarkup: `
+          <div style="min-width: 200px;">
+            <h5 style="margin-bottom: 0.5rem;">${campground.title}</h5>
+            <p style="margin-bottom: 0.5rem; color: #666;">${campground.location}</p>
+            <a href="/campgrounds/${campground._id}" style="color: #0d6efd; text-decoration: none; font-weight: 500;">
+              View Campground →
+            </a>
+          </div>
+        `,
         title: campground.title,
         id: campground._id,
       },
