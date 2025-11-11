@@ -33,6 +33,10 @@ module.exports.campgroundSchema = Joi.object({
     price: Joi.number().required().min(0),
     location: Joi.string().required().escapeHTML(),
     description: Joi.string().required().escapeHTML(),
+    geometry: Joi.object({
+      type: Joi.string().valid('Point').required(),
+      coordinates: Joi.array().items(Joi.number()).length(2).required(),
+    }).optional(),
   }).required(),
   deleteImages: Joi.array(),
 });
