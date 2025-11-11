@@ -17,11 +17,14 @@ const MapboxMap = ({
   fitMaxZoom = 3,
   // Desabilitar interação do mapa em telas pequenas para não atrapalhar o scroll da página
   disableInteractionOnMobile = false,
+  // Only animate fitBounds on initial load, not on geoJson updates
+  animateOnlyOnce = false,
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
   // Center can be shown externally if needed; internal state not required
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   const hasToken = Boolean(mapboxgl.accessToken && mapboxgl.accessToken.trim());
 
@@ -136,13 +139,17 @@ const MapboxMap = ({
       const coords = geoJson.features
         .map((f) => f?.geometry?.coordinates)
         .filter(Boolean);
+      
+      // Only animate if not animateOnlyOnce, or if animateOnlyOnce and hasn't animated yet
+      const shouldAnimate = !animateOnlyOnce || !hasAnimated;
+      
       if (fitToBounds && coords.length > 0) {
         if (coords.length === 1) {
           // Single location: center on it
           map.current.flyTo({
             center: coords[0],
             zoom: fitMaxZoom || 10,
-            duration: 2000,
+            duration: shouldAnimate ? 2000 : 0,
           });
         } else {
           // Multiple locations: fit bounds with animation
@@ -153,8 +160,13 @@ const MapboxMap = ({
           map.current.fitBounds(bounds, { 
             padding: 40, 
             maxZoom: fitMaxZoom,
-            duration: 2000,
+            duration: shouldAnimate ? 2000 : 0,
           });
+        }
+        
+        // Mark that we've animated once
+        if (animateOnlyOnce && !hasAnimated) {
+          setHasAnimated(true);
         }
       }
 
@@ -177,7 +189,7 @@ const MapboxMap = ({
     return () => {
       markers.forEach((m) => m.remove());
     };
-  }, [geoJson, isLoaded, fitToBounds, fitMaxZoom]);
+  }, [geoJson, isLoaded, fitToBounds, fitMaxZoom, animateOnlyOnce, hasAnimated]);
 
   if (!hasToken) {
     return (

@@ -15,6 +15,12 @@ export const getCampgrounds = async ({
   return response.data; // { items, page, limit, total, totalPages, hasNext, hasPrev }
 };
 
+// Get all campgrounds locations for map (no pagination)
+export const getAllCampgroundsForMap = async () => {
+  const response = await http.get(`${API_URL}?limit=1000`); // Get all campgrounds
+  return response.data.items; // Return just the items array
+};
+
 export const getCampground = async (id) => {
   const response = await http.get(`${API_URL}/${id}`);
   return response.data;

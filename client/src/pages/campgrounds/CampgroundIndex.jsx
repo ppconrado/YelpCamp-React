@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { getCampgrounds } from '../../api/campgrounds';
+import { getCampgrounds, getAllCampgroundsForMap } from '../../api/campgrounds';
 import MapboxMap from '../../components/MapboxMap';
 import CardSkeleton from '../../components/ui/CardSkeleton';
 import { useFlash } from '../../context/FlashContext';
@@ -8,6 +8,7 @@ import { timeAgo, deriveTimestampFromId } from '../../utils/timeAgo';
 
 const CampgroundIndex = () => {
   const [campgrounds, setCampgrounds] = useState([]);
+  const [allCampgroundsForMap, setAllCampgroundsForMap] = useState([]);
   const [meta, setMeta] = useState({
     page: 1,
     limit: 12,
@@ -60,6 +61,19 @@ const CampgroundIndex = () => {
     };
   }, [showFlash, pageFromUrl]);
 
+  // Fetch all campgrounds for map (once, on mount)
+  useEffect(() => {
+    const fetchAllForMap = async () => {
+      try {
+        const allCampgrounds = await getAllCampgroundsForMap();
+        setAllCampgroundsForMap(allCampgrounds);
+      } catch (error) {
+        console.error('Error loading campgrounds for map:', error);
+      }
+    };
+    fetchAllForMap();
+  }, []);
+
   // Live update timestamps every minute
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 60000);
@@ -73,10 +87,10 @@ const CampgroundIndex = () => {
     }
   }, [loading, pageFromUrl]);
 
-  // Criar GeoJSON para o mapa de cluster
+  // Criar GeoJSON para o mapa de cluster (using ALL campgrounds, not just current page)
   const geoJson = React.useMemo(() => ({
     type: 'FeatureCollection',
-    features: campgrounds.map((campground) => ({
+    features: allCampgroundsForMap.map((campground) => ({
       type: 'Feature',
       geometry: campground.geometry,
       properties: {
@@ -85,7 +99,7 @@ const CampgroundIndex = () => {
         id: campground._id,
       },
     })),
-  }), [campgrounds]);
+  }), [allCampgroundsForMap]);
 
   const goToPage = (p) => {
     const next = Math.max(1, Math.min(p, meta.totalPages));
@@ -136,8 +150,10 @@ const CampgroundIndex = () => {
             geoJson={geoJson}
             center={[-98.583333, 39.833333]} // US center (previous default)
             zoom={3}
-            // Allow auto fit to markers to restore the original globe movement
+            // Fit to show all campgrounds on initial load
             fitToBounds={true}
+            // Only animate on first load, stay static when paginating
+            animateOnlyOnce={true}
             // Evitar que o mapa capture o gesto de scroll em telas pequenas
             disableInteractionOnMobile={true}
             height={450}
