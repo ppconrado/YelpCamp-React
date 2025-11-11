@@ -8,6 +8,7 @@ import { useFlash } from '../context/FlashContext';
 import { useUnsavedChanges } from '../hooks/useUnsavedChanges';
 import SubmitButton from './ui/SubmitButton';
 import { compressImage } from '../utils/imageCompression';
+import MapboxGeocoder from './MapboxGeocoder';
 
 const campgroundSchema = z.object({
   title: z.string().min(3, 'Título deve ter pelo menos 3 caracteres'),
@@ -21,6 +22,7 @@ const campgroundSchema = z.object({
 const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
   const [imageFile, setImageFile] = useState(null);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [locationData, setLocationData] = useState(null);
   const { showFlash } = useFlash();
   const navigate = useNavigate();
 
@@ -50,13 +52,34 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
         price: initialData.price || 0,
         description: initialData.description || '',
       });
+      
+      // Set location data if editing and geometry exists
+      if (initialData.geometry && initialData.geometry.coordinates) {
+        setLocationData({
+          placeName: initialData.location,
+          coordinates: initialData.geometry.coordinates,
+          placeType: 'existing',
+        });
+      }
     }
   }, [isEdit, initialData, reset]);
 
   const onSubmit = async (data) => {
+    // Validate that location has been selected via geocoder
+    if (!locationData) {
+      showFlash('Please select a location from the suggestions', 'error');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('campground[title]', data.title);
-    formData.append('campground[location]', data.location);
+    
+    // Send the rich location data from MapboxGeocoder
+    formData.append('campground[location]', locationData.placeName);
+    formData.append('campground[geometry][type]', 'Point');
+    formData.append('campground[geometry][coordinates][]', locationData.coordinates[0]);
+    formData.append('campground[geometry][coordinates][]', locationData.coordinates[1]);
+    
     formData.append('campground[price]', data.price);
     formData.append('campground[description]', data.description);
 
@@ -112,18 +135,40 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
         )}
       </div>
 
-      <div className="form-floating mb-3">
-        <input
-          type="text"
-          className={`form-control ${errors.location ? 'is-invalid' : ''}`}
-          id="location"
-          placeholder="Location"
-          {...register('location')}
+      <div className="mb-3">
+        <label className="form-label" htmlFor="location">
+          Location
+        </label>
+        <MapboxGeocoder
+          onSelect={(location) => {
+            setLocationData(location);
+            // Also set the hidden field for validation
+            register('location').onChange({ target: { value: location.placeName } });
+          }}
+          placeholder="Search for campground location... (e.g., Yosemite Valley, 1234 Main St)"
+          initialValue={initialData.location || ''}
+          types="address,poi,place,locality"
         />
-        <label htmlFor="location">Location</label>
-        {errors.location && (
-          <div className="invalid-feedback">{errors.location.message}</div>
+        {locationData && (
+          <div className="alert alert-success mt-2 py-2 px-3">
+            <small>
+              <strong>📍 Selected:</strong> {locationData.placeName}
+              <br />
+              <span className="text-muted">
+                Coordinates: {locationData.coordinates[1].toFixed(6)}, {locationData.coordinates[0].toFixed(6)}
+                {locationData.placeType && ` • Type: ${locationData.placeType}`}
+              </span>
+            </small>
+          </div>
         )}
+        {errors.location && (
+          <div className="text-danger mt-1">
+            <small>{errors.location.message}</small>
+          </div>
+        )}
+        <div className="form-text">
+          Start typing to see suggestions. Select a location from the dropdown for precise coordinates.
+        </div>
       </div>
 
       <div className="mb-3">
