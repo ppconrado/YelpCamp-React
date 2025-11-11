@@ -30,6 +30,7 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting, isDirty },
   } = useForm({
     resolver: zodResolver(campgroundSchema),
@@ -60,9 +61,11 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
           coordinates: initialData.geometry.coordinates,
           placeType: 'existing',
         });
+        // Also set the form value
+        setValue('location', initialData.location, { shouldValidate: true });
       }
     }
-  }, [isEdit, initialData, reset]);
+  }, [isEdit, initialData, reset, setValue]);
 
   const onSubmit = async (data) => {
     // Validate that location has been selected via geocoder
@@ -142,8 +145,11 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
         <MapboxGeocoder
           onSelect={(location) => {
             setLocationData(location);
-            // Also set the hidden field for validation
-            register('location').onChange({ target: { value: location.placeName } });
+            // Update the form field value for validation
+            setValue('location', location.placeName, { 
+              shouldValidate: true,
+              shouldDirty: true 
+            });
           }}
           placeholder="Search for campground location... (e.g., Yosemite Valley, 1234 Main St)"
           initialValue={initialData.location || ''}
