@@ -122,7 +122,27 @@ const CampgroundIndex = () => {
     return (
       <>
         <div className="camp-scroll-inner" ref={scrollContainerRef}>
-          <h1 className="mb-4">All Campgrounds</h1>
+          {/* Modern header section - loading state */}
+          <div className="campgrounds-header mb-4">
+            <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+              <div>
+                <h1 className="campgrounds-title mb-2">
+                  Explore Campgrounds
+                </h1>
+                <p className="campgrounds-subtitle text-muted mb-0">
+                  Loading amazing camping destinations...
+                </p>
+              </div>
+              <Link 
+                to="/campgrounds/new" 
+                className="btn btn-success btn-add-campground"
+              >
+                <span className="me-2">+</span>
+                Add Campground
+              </Link>
+            </div>
+          </div>
+
           <div className="map-card mb-4">
             <div
               style={{
@@ -155,7 +175,27 @@ const CampgroundIndex = () => {
   return (
     <>
       <div className="camp-scroll-inner" ref={scrollContainerRef}>
-        <h1 className="mb-4">All Campgrounds</h1>
+        {/* Modern header section */}
+        <div className="campgrounds-header mb-4">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h1 className="campgrounds-title mb-2">
+                Explore Campgrounds
+              </h1>
+              <p className="campgrounds-subtitle text-muted mb-0">
+                Discover {meta.total} amazing camping destinations
+              </p>
+            </div>
+            <Link 
+              to="/campgrounds/new" 
+              className="btn btn-success btn-add-campground"
+            >
+              <span className="me-2">+</span>
+              Add Campground
+            </Link>
+          </div>
+        </div>
+
         <div className="map-card mb-4">
           <MapboxMap
             geoJson={geoJson}

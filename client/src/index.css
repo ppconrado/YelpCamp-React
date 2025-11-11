@@ -40,6 +40,65 @@ main {
 }
 
 /* ------------------------------
+/* Modern campgrounds header */
+.campgrounds-header {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 2rem !important;
+}
+
+.campgrounds-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #212529;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.campgrounds-subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  font-weight: 400;
+}
+
+.btn-add-campground {
+  padding: 0.625rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(25, 135, 84, 0.15);
+  white-space: nowrap;
+}
+
+.btn-add-campground:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(25, 135, 84, 0.25);
+}
+
+.btn-add-campground:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .campgrounds-header {
+    padding: 1rem 0;
+  }
+  
+  .campgrounds-title {
+    font-size: 1.5rem;
+  }
+  
+  .campgrounds-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .btn-add-campground {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
 /* Modern pagination styling */
 .pagination-modern {
   gap: 0.25rem;
