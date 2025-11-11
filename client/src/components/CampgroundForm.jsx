@@ -76,15 +76,14 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
 
     const formData = new FormData();
     formData.append('campground[title]', data.title);
-    
-    // Send the rich location data from MapboxGeocoder
     formData.append('campground[location]', locationData.placeName);
-    formData.append('campground[geometry][type]', 'Point');
-    formData.append('campground[geometry][coordinates][]', locationData.coordinates[0]);
-    formData.append('campground[geometry][coordinates][]', locationData.coordinates[1]);
-    
     formData.append('campground[price]', data.price);
     formData.append('campground[description]', data.description);
+    
+    // Send geometry data in the correct format
+    formData.append('campground[geometry][type]', 'Point');
+    formData.append('campground[geometry][coordinates][0]', locationData.coordinates[0]);
+    formData.append('campground[geometry][coordinates][1]', locationData.coordinates[1]);
 
     if (imageFile) {
       // Compress image before upload

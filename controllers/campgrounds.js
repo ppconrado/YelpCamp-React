@@ -54,7 +54,8 @@ module.exports.createCampground = async (req, res, next) => {
   const campground = new Campground(req.body.campground);
 
   // MAPBOX GEOCODING API - CONVERTE DATA STRING EM COORDENADAS
-  if (geocoder) {
+  // Only geocode if geometry wasn't provided by the frontend
+  if (geocoder && !req.body.campground.geometry) {
     const geoData = await geocoder
       .forwardGeocode({
         query: req.body.campground.location,
@@ -66,6 +67,8 @@ module.exports.createCampground = async (req, res, next) => {
       campground.geometry = geoData.body.features[0].geometry;
     }
   }
+  // If geometry was provided by frontend, it's already in campground object from req.body.campground
+  
   // RECEBEMOS AS IMAGENS DO CLOUDINARY
   campground.images = req.files.map((f) => ({
     url: f.path,
