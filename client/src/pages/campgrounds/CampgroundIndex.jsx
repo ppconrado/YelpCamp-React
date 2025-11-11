@@ -126,15 +126,13 @@ const CampgroundIndex = () => {
           <div className="campgrounds-header mb-4">
             <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
               <div>
-                <h1 className="campgrounds-title mb-2">
-                  Explore Campgrounds
-                </h1>
+                <h1 className="campgrounds-title mb-2">Explore Campgrounds</h1>
                 <p className="campgrounds-subtitle text-muted mb-0">
                   Loading amazing camping destinations...
                 </p>
               </div>
-              <Link 
-                to="/campgrounds/new" 
+              <Link
+                to="/campgrounds/new"
                 className="btn btn-success btn-add-campground"
               >
                 <span className="me-2">+</span>
@@ -179,15 +177,13 @@ const CampgroundIndex = () => {
         <div className="campgrounds-header mb-4">
           <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-              <h1 className="campgrounds-title mb-2">
-                Explore Campgrounds
-              </h1>
+              <h1 className="campgrounds-title mb-2">Explore Campgrounds</h1>
               <p className="campgrounds-subtitle text-muted mb-0">
                 Discover {meta.total} amazing camping destinations
               </p>
             </div>
-            <Link 
-              to="/campgrounds/new" 
+            <Link
+              to="/campgrounds/new"
               className="btn btn-success btn-add-campground"
             >
               <span className="me-2">+</span>

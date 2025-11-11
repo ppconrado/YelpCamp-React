@@ -53,7 +53,7 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
         price: initialData.price || 0,
         description: initialData.description || '',
       });
-      
+
       // Set location data if editing and geometry exists
       if (initialData.geometry && initialData.geometry.coordinates) {
         setLocationData({
@@ -79,11 +79,17 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
     formData.append('campground[location]', locationData.placeName);
     formData.append('campground[price]', data.price);
     formData.append('campground[description]', data.description);
-    
+
     // Send geometry data in the correct format
     formData.append('campground[geometry][type]', 'Point');
-    formData.append('campground[geometry][coordinates][0]', locationData.coordinates[0]);
-    formData.append('campground[geometry][coordinates][1]', locationData.coordinates[1]);
+    formData.append(
+      'campground[geometry][coordinates][0]',
+      locationData.coordinates[0]
+    );
+    formData.append(
+      'campground[geometry][coordinates][1]',
+      locationData.coordinates[1]
+    );
 
     if (imageFile) {
       // Compress image before upload
@@ -145,9 +151,9 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
           onSelect={(location) => {
             setLocationData(location);
             // Update the form field value for validation
-            setValue('location', location.placeName, { 
+            setValue('location', location.placeName, {
               shouldValidate: true,
-              shouldDirty: true 
+              shouldDirty: true,
             });
           }}
           placeholder="Search for campground location... (e.g., Yosemite Valley, 1234 Main St)"
@@ -160,7 +166,8 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
               <strong>📍 Selected:</strong> {locationData.placeName}
               <br />
               <span className="text-muted">
-                Coordinates: {locationData.coordinates[1].toFixed(6)}, {locationData.coordinates[0].toFixed(6)}
+                Coordinates: {locationData.coordinates[1].toFixed(6)},{' '}
+                {locationData.coordinates[0].toFixed(6)}
                 {locationData.placeType && ` • Type: ${locationData.placeType}`}
               </span>
             </small>
@@ -172,7 +179,8 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
           </div>
         )}
         <div className="form-text">
-          Start typing to see suggestions. Select a location from the dropdown for precise coordinates.
+          Start typing to see suggestions. Select a location from the dropdown
+          for precise coordinates.
         </div>
       </div>
 

@@ -68,7 +68,7 @@ module.exports.createCampground = async (req, res, next) => {
     }
   }
   // If geometry was provided by frontend, it's already in campground object from req.body.campground
-  
+
   // RECEBEMOS AS IMAGENS DO CLOUDINARY
   campground.images = req.files.map((f) => ({
     url: f.path,

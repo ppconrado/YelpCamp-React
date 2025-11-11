@@ -9,6 +9,7 @@ This guide explains how Mapbox geocoding works and how to implement precise loca
 ## 🎯 How Mapbox Geocoding Works
 
 ### Current Implementation (Simple Text Input)
+
 ```javascript
 // User types: "New York"
 // Backend geocodes: → [longitude, latitude]
@@ -16,6 +17,7 @@ This guide explains how Mapbox geocoding works and how to implement precise loca
 ```
 
 **Limitations:**
+
 - ❌ No autocomplete suggestions
 - ❌ Ambiguous locations (multiple "New York"s worldwide)
 - ❌ Limited precision (city-level only)
@@ -36,6 +38,7 @@ This guide explains how Mapbox geocoding works and how to implement precise loca
 ```
 
 **Benefits:**
+
 - ✅ Real-time autocomplete with suggestions
 - ✅ Precise addresses (street + number)
 - ✅ Complete address components
@@ -48,11 +51,12 @@ This guide explains how Mapbox geocoding works and how to implement precise loca
 ## 📦 What Data Mapbox Returns
 
 ### Basic Location Object
+
 ```javascript
 {
   placeName: "1234 Main Street, Los Angeles, California 90012, United States",
   coordinates: [-118.2437, 34.0522], // [longitude, latitude]
-  
+
   // Address components
   address: "1234",          // Street number
   text: "Main Street",      // Street name
@@ -62,7 +66,7 @@ This guide explains how Mapbox geocoding works and how to implement precise loca
   neighborhood: "Arts District",
   region: "California",
   country: "United States",
-  
+
   // Type of location
   placeType: "address",  // address, poi, place, locality, etc.
 }
@@ -70,22 +74,23 @@ This guide explains how Mapbox geocoding works and how to implement precise loca
 
 ### Place Types Supported
 
-| Type | Example | Precision |
-|------|---------|-----------|
-| `address` | 1234 Main St, LA 90012 | 🎯 Highest (street-level) |
-| `poi` | Yosemite Valley Campground | 🎯 Exact place |
-| `neighborhood` | Venice Beach | 🎯 Area within city |
-| `locality` | Santa Monica | 🎯 Small town/suburb |
-| `place` | Los Angeles | ⭐ City |
-| `postcode` | 90210 | ⭐ Zip code area |
-| `region` | California | ⭐ State/Province |
-| `country` | United States | ⭐ Country |
+| Type           | Example                    | Precision                 |
+| -------------- | -------------------------- | ------------------------- |
+| `address`      | 1234 Main St, LA 90012     | 🎯 Highest (street-level) |
+| `poi`          | Yosemite Valley Campground | 🎯 Exact place            |
+| `neighborhood` | Venice Beach               | 🎯 Area within city       |
+| `locality`     | Santa Monica               | 🎯 Small town/suburb      |
+| `place`        | Los Angeles                | ⭐ City                   |
+| `postcode`     | 90210                      | ⭐ Zip code area          |
+| `region`       | California                 | ⭐ State/Province         |
+| `country`      | United States              | ⭐ Country                |
 
 ---
 
 ## 🛠️ Implementation Steps
 
 ### Step 1: Install Dependencies (Already Done)
+
 ```bash
 npm install axios  # For API calls
 ```
@@ -93,6 +98,7 @@ npm install axios  # For API calls
 ### Step 2: Use the MapboxGeocoder Component
 
 **In CampgroundForm.jsx:**
+
 ```jsx
 import MapboxGeocoder from './MapboxGeocoder';
 
@@ -102,7 +108,7 @@ const CampgroundForm = () => {
   const handleLocationSelect = (location) => {
     console.log('Selected location:', location);
     setLocationData(location);
-    
+
     // Now you have:
     // - location.placeName (for display)
     // - location.coordinates (for map)
@@ -117,15 +123,15 @@ const CampgroundForm = () => {
           onSelect={handleLocationSelect}
           placeholder="Search for campground location..."
           types="address,poi,locality"
-          country="us"  // Optional: limit to USA
+          country="us" // Optional: limit to USA
         />
-        
+
         {locationData && (
           <div className="alert alert-info mt-2">
             <strong>Selected:</strong> {locationData.placeName}
             <br />
             <small>
-              Coordinates: {locationData.coordinates[1].toFixed(4)}, 
+              Coordinates: {locationData.coordinates[1].toFixed(4)},
               {locationData.coordinates[0].toFixed(4)}
             </small>
           </div>
@@ -139,23 +145,24 @@ const CampgroundForm = () => {
 ### Step 3: Update Backend to Store Rich Location Data
 
 **Update Campground Model (models/campground.js):**
+
 ```javascript
 const campgroundSchema = new Schema({
   title: String,
-  
+
   // Rich location data
   location: {
-    placeName: String,        // Full formatted address
-    address: String,          // Street number
-    street: String,           // Street name
+    placeName: String, // Full formatted address
+    address: String, // Street number
+    street: String, // Street name
     postcode: String,
     city: String,
     neighborhood: String,
     region: String,
     country: String,
-    placeType: String,        // address, poi, place, etc.
+    placeType: String, // address, poi, place, etc.
   },
-  
+
   // Keep geometry for map
   geometry: {
     type: {
@@ -168,7 +175,7 @@ const campgroundSchema = new Schema({
       required: true,
     },
   },
-  
+
   // ... rest of schema
 });
 ```
@@ -176,13 +183,14 @@ const campgroundSchema = new Schema({
 ### Step 4: Update Controller to Handle Rich Data
 
 **In controllers/campgrounds.js:**
+
 ```javascript
 module.exports.createCampground = async (req, res, next) => {
   const campground = new Campground({
     title: req.body.campground.title,
     description: req.body.campground.description,
     price: req.body.campground.price,
-    
+
     // Store rich location data from frontend
     location: {
       placeName: req.body.campground.location.placeName,
@@ -195,17 +203,17 @@ module.exports.createCampground = async (req, res, next) => {
       country: req.body.campground.location.country,
       placeType: req.body.campground.location.placeType,
     },
-    
+
     geometry: {
       type: 'Point',
       coordinates: req.body.campground.location.coordinates,
     },
-    
+
     author: req.user._id,
   });
 
   // No need for backend geocoding anymore - frontend provides everything!
-  
+
   await campground.save();
   res.json({ success: true, campground });
 };
@@ -216,30 +224,35 @@ module.exports.createCampground = async (req, res, next) => {
 ## 🎨 Features of MapboxGeocoder Component
 
 ### 1. **Real-time Autocomplete**
+
 - Suggestions appear as user types
 - Debounced (300ms) to avoid excessive API calls
 - Shows top 5 most relevant results
 
 ### 2. **Keyboard Navigation**
+
 - ↓/↑ arrows to navigate suggestions
 - Enter to select
 - Escape to close
 
 ### 3. **Visual Indicators**
+
 - Icons for each place type (📍 address, 🏙️ city, etc.)
 - Loading spinner during search
 - Highlighted selection
 
 ### 4. **Smart Filtering**
+
 ```jsx
 <MapboxGeocoder
-  types="address,poi,locality"  // Only show addresses and places
-  country="us"                   // Limit to USA
+  types="address,poi,locality" // Only show addresses and places
+  country="us" // Limit to USA
   onSelect={handleSelect}
 />
 ```
 
 ### 5. **Rich Data Return**
+
 Returns complete location object with all address components
 
 ---
@@ -247,15 +260,18 @@ Returns complete location object with all address components
 ## 💰 Mapbox API Costs
 
 ### Free Tier (Generous)
+
 - **100,000 requests/month FREE**
 - Perfect for small/medium apps
 - Includes autocomplete (each keystroke = 1 request)
 
 ### Pricing After Free Tier
+
 - $0.50 per 1,000 requests
 - Very affordable
 
 ### Cost Example
+
 - 1,000 users × 10 searches each × 5 keystrokes average = 50,000 requests
 - **Still FREE** (under 100k limit)
 
@@ -264,16 +280,19 @@ Returns complete location object with all address components
 ## 🚀 Migration Strategy
 
 ### Phase 1: Add Component (Non-Breaking)
+
 1. Create MapboxGeocoder component ✅
 2. Update backend model to accept both formats
 3. Keep old simple location field working
 
 ### Phase 2: Update Forms
+
 1. Replace location input with MapboxGeocoder
 2. Update CampgroundForm.jsx
 3. Test thoroughly
 
 ### Phase 3: Migrate Data (Optional)
+
 1. Create migration script to geocode existing locations
 2. Enrich old campground data with address components
 3. Run migration on production database
@@ -283,6 +302,7 @@ Returns complete location object with all address components
 ## 📊 Database Schema Comparison
 
 ### Before (Current)
+
 ```javascript
 {
   location: "New York",  // Simple string
@@ -294,6 +314,7 @@ Returns complete location object with all address components
 ```
 
 ### After (Enhanced)
+
 ```javascript
 {
   location: {
@@ -321,21 +342,25 @@ Returns complete location object with all address components
 ### Test Cases
 
 1. **Basic Search**
+
    - Type "Los Angeles"
    - Should show city suggestions
    - Select one → coordinates returned
 
 2. **Precise Address**
+
    - Type "1234 Main St, Los Angeles"
    - Should show street-level addresses
    - Select → full address components
 
 3. **POI Search**
+
    - Type "Yosemite Campground"
    - Should show campground locations
    - Select → exact POI coordinates
 
 4. **Keyboard Navigation**
+
    - Type query
    - Use arrow keys
    - Press Enter on selection
@@ -350,15 +375,14 @@ Returns complete location object with all address components
 ## 🔧 Customization Options
 
 ### Limit to Specific Types
+
 ```jsx
 // Only campgrounds and parks
-<MapboxGeocoder
-  types="poi"
-  onSelect={handleSelect}
-/>
+<MapboxGeocoder types="poi" onSelect={handleSelect} />
 ```
 
 ### Geographic Boundaries
+
 ```jsx
 // Only USA locations
 <MapboxGeocoder
@@ -374,10 +398,11 @@ Returns complete location object with all address components
 ```
 
 ### Proximity Bias (Search Near)
+
 ```jsx
 // Prefer results near San Francisco
 <MapboxGeocoder
-  proximity={[-122.4194, 37.7749]}  // [lng, lat]
+  proximity={[-122.4194, 37.7749]} // [lng, lat]
   onSelect={handleSelect}
 />
 ```
@@ -387,12 +412,14 @@ Returns complete location object with all address components
 ## 📝 Next Steps
 
 ### Immediate (Recommended)
+
 1. ✅ Component created: `MapboxGeocoder.jsx`
 2. ⏳ Integrate into `CampgroundForm.jsx`
 3. ⏳ Update backend model (backwards compatible)
 4. ⏳ Test with real data
 
 ### Future Enhancements
+
 1. Add map preview showing selected location
 2. Allow manual pin placement on map
 3. Add "Use my current location" button
@@ -404,15 +431,18 @@ Returns complete location object with all address components
 ## 🆘 Troubleshooting
 
 ### "No suggestions appear"
+
 - Check `VITE_MAPBOX_TOKEN` in `.env.local`
 - Verify token has Geocoding API enabled
 - Check browser console for errors
 
 ### "Suggestions are slow"
+
 - Increase debounce delay (currently 300ms)
 - Reduce limit from 5 to 3 suggestions
 
 ### "Wrong country results"
+
 - Add `country` prop to limit results
 - Use proximity bias for better relevance
 
@@ -430,6 +460,7 @@ Returns complete location object with all address components
 ## ✨ Summary
 
 **What You Get:**
+
 - 🎯 Precise location input (street-level accuracy)
 - 🔍 Real-time autocomplete suggestions
 - 📍 Rich address components (postcode, neighborhood, etc.)
@@ -438,6 +469,7 @@ Returns complete location object with all address components
 - 💰 Free for 100k requests/month
 
 **Impact:**
+
 - Users can find exact campground locations
 - Maps show precise pinpoints (not just city centers)
 - Better search and filtering capabilities

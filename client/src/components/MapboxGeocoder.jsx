@@ -3,19 +3,19 @@ import axios from 'axios';
 
 /**
  * MapboxGeocoder - Autocomplete location input with Mapbox Geocoding API
- * 
+ *
  * Features:
  * - Real-time autocomplete suggestions
  * - Precise address selection
  * - Returns full location details (coordinates, address components)
  * - Supports all Mapbox place types: address, poi, locality, etc.
  */
-const MapboxGeocoder = ({ 
-  onSelect, 
-  placeholder = "Search for a location...",
-  initialValue = "",
-  types = "address,poi,place,locality,neighborhood",
-  country = "", // Optional: limit to specific country (e.g., "us")
+const MapboxGeocoder = ({
+  onSelect,
+  placeholder = 'Search for a location...',
+  initialValue = '',
+  types = 'address,poi,place,locality,neighborhood',
+  country = '', // Optional: limit to specific country (e.g., "us")
 }) => {
   const [query, setQuery] = useState(initialValue);
   const [suggestions, setSuggestions] = useState([]);
@@ -73,7 +73,9 @@ const MapboxGeocoder = ({
         params.append('country', country);
       }
 
-      const url = `${GEOCODING_API}/${encodeURIComponent(searchQuery)}.json?${params}`;
+      const url = `${GEOCODING_API}/${encodeURIComponent(
+        searchQuery
+      )}.json?${params}`;
       const response = await axios.get(url);
 
       setSuggestions(response.data.features || []);
@@ -105,14 +107,14 @@ const MapboxGeocoder = ({
     const locationData = {
       // Display name
       placeName: feature.place_name,
-      
+
       // Coordinates [longitude, latitude]
       coordinates: feature.geometry.coordinates,
-      
+
       // Address components
       address: feature.address || '',
       text: feature.text || '',
-      
+
       // Context (additional details)
       postcode: getContext(feature, 'postcode'),
       place: getContext(feature, 'place'),
@@ -120,10 +122,10 @@ const MapboxGeocoder = ({
       neighborhood: getContext(feature, 'neighborhood'),
       region: getContext(feature, 'region'),
       country: getContext(feature, 'country'),
-      
+
       // Place type
       placeType: feature.place_type?.[0] || 'unknown',
-      
+
       // Full feature for advanced use
       fullFeature: feature,
     };
@@ -131,7 +133,7 @@ const MapboxGeocoder = ({
     setQuery(feature.place_name);
     setShowSuggestions(false);
     setSuggestions([]);
-    
+
     if (onSelect) {
       onSelect(locationData);
     }
@@ -140,7 +142,7 @@ const MapboxGeocoder = ({
   // Helper to extract context information
   const getContext = (feature, type) => {
     if (!feature.context) return null;
-    const item = feature.context.find(c => c.id.startsWith(type));
+    const item = feature.context.find((c) => c.id.startsWith(type));
     return item?.text || null;
   };
 
@@ -150,13 +152,13 @@ const MapboxGeocoder = ({
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedIndex(prev => 
+        setSelectedIndex((prev) =>
           prev < suggestions.length - 1 ? prev + 1 : prev
         );
         break;
       case 'ArrowUp':
         e.preventDefault();
-        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1);
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
         break;
       case 'Enter':
         e.preventDefault();
@@ -189,7 +191,8 @@ const MapboxGeocoder = ({
   if (!MAPBOX_TOKEN) {
     return (
       <div className="alert alert-warning">
-        <strong>Mapbox not configured.</strong> Please set VITE_MAPBOX_TOKEN in your .env file.
+        <strong>Mapbox not configured.</strong> Please set VITE_MAPBOX_TOKEN in
+        your .env file.
       </div>
     );
   }
@@ -198,8 +201,19 @@ const MapboxGeocoder = ({
     <div className="mapbox-geocoder-wrapper" style={{ position: 'relative' }}>
       <div className="input-group">
         <span className="input-group-text">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
         </span>
         <input
@@ -223,7 +237,7 @@ const MapboxGeocoder = ({
       </div>
 
       {showSuggestions && suggestions.length > 0 && (
-        <div 
+        <div
           ref={suggestionsRef}
           className="mapbox-suggestions"
           style={{
@@ -245,12 +259,15 @@ const MapboxGeocoder = ({
           {suggestions.map((feature, index) => (
             <div
               key={feature.id}
-              className={`suggestion-item ${index === selectedIndex ? 'active' : ''}`}
+              className={`suggestion-item ${
+                index === selectedIndex ? 'active' : ''
+              }`}
               onClick={() => handleSelectSuggestion(feature)}
               style={{
                 padding: '12px 16px',
                 cursor: 'pointer',
-                borderBottom: index < suggestions.length - 1 ? '1px solid #f1f3f5' : 'none',
+                borderBottom:
+                  index < suggestions.length - 1 ? '1px solid #f1f3f5' : 'none',
                 backgroundColor: index === selectedIndex ? '#f8f9fa' : 'white',
                 transition: 'background-color 0.15s',
               }}
@@ -263,13 +280,25 @@ const MapboxGeocoder = ({
                 }
               }}
             >
-              <div style={{ fontSize: '0.875rem', color: '#6c757d', marginBottom: '2px' }}>
+              <div
+                style={{
+                  fontSize: '0.875rem',
+                  color: '#6c757d',
+                  marginBottom: '2px',
+                }}
+              >
                 {formatPlaceType(feature.place_type?.[0])}
               </div>
               <div style={{ fontWeight: 500, color: '#212529' }}>
                 {feature.text}
               </div>
-              <div style={{ fontSize: '0.875rem', color: '#6c757d', marginTop: '2px' }}>
+              <div
+                style={{
+                  fontSize: '0.875rem',
+                  color: '#6c757d',
+                  marginTop: '2px',
+                }}
+              >
                 {feature.place_name}
               </div>
             </div>
@@ -278,7 +307,7 @@ const MapboxGeocoder = ({
       )}
 
       {showSuggestions && query && suggestions.length === 0 && !isLoading && (
-        <div 
+        <div
           ref={suggestionsRef}
           style={{
             position: 'absolute',
