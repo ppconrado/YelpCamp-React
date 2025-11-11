@@ -139,10 +139,10 @@ const MapboxMap = ({
       const coords = geoJson.features
         .map((f) => f?.geometry?.coordinates)
         .filter(Boolean);
-      
+
       // Only animate if not animateOnlyOnce, or if animateOnlyOnce and hasn't animated yet
       const shouldAnimate = !animateOnlyOnce || !hasAnimated;
-      
+
       if (fitToBounds && coords.length > 0) {
         if (coords.length === 1) {
           // Single location: center on it
@@ -157,13 +157,13 @@ const MapboxMap = ({
             (b, c) => b.extend(c),
             new mapboxgl.LngLatBounds(coords[0], coords[0])
           );
-          map.current.fitBounds(bounds, { 
-            padding: 40, 
+          map.current.fitBounds(bounds, {
+            padding: 40,
             maxZoom: fitMaxZoom,
             duration: shouldAnimate ? 2000 : 0,
           });
         }
-        
+
         // Mark that we've animated once
         if (animateOnlyOnce && !hasAnimated) {
           setHasAnimated(true);
@@ -189,7 +189,14 @@ const MapboxMap = ({
     return () => {
       markers.forEach((m) => m.remove());
     };
-  }, [geoJson, isLoaded, fitToBounds, fitMaxZoom, animateOnlyOnce, hasAnimated]);
+  }, [
+    geoJson,
+    isLoaded,
+    fitToBounds,
+    fitMaxZoom,
+    animateOnlyOnce,
+    hasAnimated,
+  ]);
 
   if (!hasToken) {
     return (

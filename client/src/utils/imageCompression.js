@@ -3,7 +3,7 @@ import imageCompression from 'browser-image-compression';
 /**
  * Compress and resize images before upload
  * Reduces bandwidth and server storage while maintaining quality
- * 
+ *
  * @param {File} file - Original image file
  * @param {Object} options - Compression options
  * @returns {Promise<File>} Compressed image file
@@ -24,13 +24,17 @@ export const compressImage = async (file, options = {}) => {
     }
 
     const compressedFile = await imageCompression(file, defaultOptions);
-    
+
     // Log compression results in development
     if (import.meta.env.DEV) {
       console.log(
         `Image compressed: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(
-          compressedFile.size / 1024 / 1024
-        ).toFixed(2)}MB (${Math.round((1 - compressedFile.size / file.size) * 100)}% reduction)`
+          compressedFile.size /
+          1024 /
+          1024
+        ).toFixed(2)}MB (${Math.round(
+          (1 - compressedFile.size / file.size) * 100
+        )}% reduction)`
       );
     }
 
@@ -44,19 +48,23 @@ export const compressImage = async (file, options = {}) => {
 
 /**
  * Compress multiple images in parallel
- * 
+ *
  * @param {FileList|File[]} files - Array of image files
  * @param {Object} options - Compression options
  * @param {Function} onProgress - Progress callback (current, total)
  * @returns {Promise<File[]>} Array of compressed files
  */
-export const compressImages = async (files, options = {}, onProgress = null) => {
+export const compressImages = async (
+  files,
+  options = {},
+  onProgress = null
+) => {
   const fileArray = Array.from(files);
   const compressed = [];
 
   for (let i = 0; i < fileArray.length; i++) {
     const file = fileArray[i];
-    
+
     // Only compress image files
     if (file.type.startsWith('image/')) {
       const compressedFile = await compressImage(file, options);

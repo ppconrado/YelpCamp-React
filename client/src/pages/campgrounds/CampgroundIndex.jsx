@@ -88,13 +88,14 @@ const CampgroundIndex = () => {
   }, [loading, pageFromUrl]);
 
   // Criar GeoJSON para o mapa de cluster (using ALL campgrounds, not just current page)
-  const geoJson = React.useMemo(() => ({
-    type: 'FeatureCollection',
-    features: allCampgroundsForMap.map((campground) => ({
-      type: 'Feature',
-      geometry: campground.geometry,
-      properties: {
-        popUpMarkup: `
+  const geoJson = React.useMemo(
+    () => ({
+      type: 'FeatureCollection',
+      features: allCampgroundsForMap.map((campground) => ({
+        type: 'Feature',
+        geometry: campground.geometry,
+        properties: {
+          popUpMarkup: `
           <div style="min-width: 200px;">
             <h5 style="margin-bottom: 0.5rem;">${campground.title}</h5>
             <p style="margin-bottom: 0.5rem; color: #666;">${campground.location}</p>
@@ -103,11 +104,13 @@ const CampgroundIndex = () => {
             </a>
           </div>
         `,
-        title: campground.title,
-        id: campground._id,
-      },
-    })),
-  }), [allCampgroundsForMap]);
+          title: campground.title,
+          id: campground._id,
+        },
+      })),
+    }),
+    [allCampgroundsForMap]
+  );
 
   const goToPage = (p) => {
     const next = Math.max(1, Math.min(p, meta.totalPages));
@@ -235,7 +238,7 @@ const CampgroundIndex = () => {
                 <span aria-hidden="true">&laquo;&laquo;</span>
               </button>
             </li>
-            
+
             {/* Previous */}
             <li className={`page-item ${!meta.hasPrev ? 'disabled' : ''}`}>
               <button
@@ -252,9 +255,15 @@ const CampgroundIndex = () => {
             {(() => {
               const pages = [];
               const showPages = 5; // Show 5 page numbers
-              let startPage = Math.max(1, meta.page - Math.floor(showPages / 2));
-              let endPage = Math.min(meta.totalPages, startPage + showPages - 1);
-              
+              let startPage = Math.max(
+                1,
+                meta.page - Math.floor(showPages / 2)
+              );
+              let endPage = Math.min(
+                meta.totalPages,
+                startPage + showPages - 1
+              );
+
               // Adjust start if we're near the end
               if (endPage - startPage < showPages - 1) {
                 startPage = Math.max(1, endPage - showPages + 1);
@@ -333,7 +342,11 @@ const CampgroundIndex = () => {
             </li>
 
             {/* Last page */}
-            <li className={`page-item ${meta.page === meta.totalPages ? 'disabled' : ''}`}>
+            <li
+              className={`page-item ${
+                meta.page === meta.totalPages ? 'disabled' : ''
+              }`}
+            >
               <button
                 className="page-link"
                 onClick={() => goToPage(meta.totalPages)}

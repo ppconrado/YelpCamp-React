@@ -59,7 +59,7 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
     formData.append('campground[location]', data.location);
     formData.append('campground[price]', data.price);
     formData.append('campground[description]', data.description);
-    
+
     if (imageFile) {
       // Compress image before upload
       setIsCompressing(true);
@@ -165,7 +165,11 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
           Add Image
           {isCompressing && (
             <span className="ms-2 text-muted">
-              <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              <span
+                className="spinner-border spinner-border-sm me-1"
+                role="status"
+                aria-hidden="true"
+              ></span>
               Optimizing image...
             </span>
           )}
@@ -179,11 +183,15 @@ const CampgroundForm = ({ initialData = {}, isEdit = false }) => {
           disabled={isCompressing}
         />
         <div className="form-text">
-          Images will be automatically compressed and resized for optimal performance.
+          Images will be automatically compressed and resized for optimal
+          performance.
         </div>
       </div>
 
-      <SubmitButton loading={isSubmitting || isCompressing} className="btn btn-success">
+      <SubmitButton
+        loading={isSubmitting || isCompressing}
+        className="btn btn-success"
+      >
         {isEdit ? 'Update Campground' : 'Add Campground'}
       </SubmitButton>
     </form>
