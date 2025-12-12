@@ -1,5 +1,11 @@
 # JosePauloCamp 🏕️
 
+## Status do Projeto
+
+O desenvolvimento deste repositório foi pausado no commit/tag `v1.0-final` em 12/12/2025. Novos serviços e funcionalidades serão desenvolvidos em um novo repositório.
+
+Para retomar ou consultar o estado final deste projeto, utilize a tag `v1.0-final`.
+
 > A modern, full-stack campground review platform built with React, Express, and MongoDB.
 
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://josepaulocamp.vercel.app)
